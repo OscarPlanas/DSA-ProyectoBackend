@@ -6,101 +6,154 @@ import org.apache.log4j.Logger;
 import java.lang.Object;
 import java.util.*;
 
-public class UserManagerImpl implements UserManager{
+public class UserManagerImpl implements UserManager {
     private List<User> userList;
     private List<Item> itemList;
+    private List<User> onlineUsersList;
+    private HashMap<String, User> mapUser;
     private static UserManagerImpl instance;
     //logs
     final static Logger logger = Logger.getLogger(UserManagerImpl.class);
 
     private UserManagerImpl() {
-        userList = new LinkedList<>();
-        itemList = new LinkedList<>();
+        this.userList = new LinkedList<>();
+        this.itemList = new LinkedList<>();
+        this.onlineUsersList = new LinkedList<>();
     }
-    public static UserManagerImpl getInstance(){
+
+    //Singleton
+    public static UserManagerImpl getInstance() {
         //logger.info(instance);
-        if(instance == null)
+        if (instance == null)
             instance = new UserManagerImpl();
         //logger.info(instance);
         return instance;
     }
-    public void addItem(String name, double price, String desc){
-        itemList.add(new Item(price,name,desc));
-    }
 
-    public List<Item> getListObjectsByPrice() {
-        itemList.sort(Comparator.comparingDouble(Item::getCoins).reversed());
-        return itemList;
-    }
-
+    //Añadir usuario
     @Override
-    public int userRegister(String id, String name, String lastName, String pass, String bornDate, String mail){
-        logger.info("New User Reister. ID: " + id + " -Name: " + name + " " + lastName + " -Pass: " + pass + " -Mail: " + mail);
-        if(searchUser(mail) == -1){
-            logger.error("User with mail already exists.");
-            return -1;
-        }
-
-        userList.add( new User(id,name,lastName,pass,bornDate,mail));
-        logger.info("User " + id + " registered");
-        return 0;
-    }
-
-    @Override
-    public void userLogIn(String mail, String pass) {
-        logger.info("User log-in with mail: " + mail + " Password: " + pass);
-        for (User u:userList) {
-            if(u.getMail().equals(mail) && u.getPassword().equals(pass)){
-                logger.info("User " + u.getName() + " loged-in");
-                return;
+    public User addUser(User user) {
+        String username = user.getUsername();
+        for (User u : this.userList) {
+            if (u.getUsername().equals(username)) {
+                logger.info("Usuario " + username + " encontrado");
+                return null;
             }
         }
-        logger.warn("User not registered");
+        logger.info("Nuevo usuario: " + user);
+        this.userList.add(user);
+        logger.info("Nuevo usuario añadido: " + user);
+        return user;
     }
 
     @Override
-    public List<User> getUserList() {
-        userList.sort(Comparator.comparing(User::getLastName).thenComparing(User::getName));
-        return userList;
+    public User getUser(String username) {
+        logger.info("Usuario: " + username);
+        for (User user : this.userList) {
+            if (user.getUsername().equals((username))) {
+                logger.info("Usuario " + username + " encontrado");
+                return user;
+            }
+        }
+        logger.info("Usuario " + username + " no encontrado");
+        return null;
     }
-    private int searchUser(String mail){
-        for (User u:userList) {
-            if(u.getMail().equals(mail))
+
+    @Override
+    public void userLogIn(String username, String pass) {
+        User u = this.getUser(username);
+        if (u == null) {
+            logger.info("Este usuario no existe");
+        } else if (u.getPassword().equals(pass)) {
+            this.onlineUsersList.add(u);
+            logger.info("Usuario " + username + " ha podido entrar correctamente");
+        } else {
+            logger.info("Contraseña incorrecta");
+        }
+    }
+
+    @Override
+    public List<User> getLoggedUsers() {
+        return onlineUsersList;
+    }
+
+    @Override
+    public void logOutUser(String username) {
+        User u = this.getUser(username);
+        if (u == null) {
+            logger.info("El usuario no existe");
+        } else {
+            this.onlineUsersList.remove(u);
+            logger.info("Usuario " + username + " ha salido correctamente");
+        }
+    }
+
+    private int searchUser(String name) {
+        for (User u : userList) {
+            if (u.getName().equals(name))
                 return userList.indexOf(u);
         }
         return -1;
     }
 
-    private Item searchItem(String itemID){
-        for (Item i:itemList) {
-            if(i.getName().equals(itemID))
-                return i;
+    @Override
+    public void deleteUser(String username) {
+        User user = this.getUser(username);
+        if (user == null) {
+            logger.info("Usuario: " + username + " no encontrado");
+        } else {
+            this.userList.remove(user);
+            logger.info("Usuario " + username + " eliminado");
         }
+    }
+    @Override
+    public List<User> getAllUsers(){
+        return this.userList;
+    }
+
+    @Override
+    public int userListSize() {
+        return this.userList.size();
+    }
+
+    @Override
+    public Item addItem(Item item){
+        logger.info("Item nuevo "+ item.getName() +": " + item.getDescription());
+        this.itemList.add(item);
+        logger.info("Nuevo item añadido: "+item);
+        return item;
+    }
+    @Override
+    public Item crearItem(String name, String descripcion, int precio){
+        return this.addItem(new Item(name,descripcion,precio));
+    }
+    @Override
+    public Item getItem(String name){
+        for(Item item: this.itemList){
+            if(item.getName().equals(name)){
+                logger.info("Item "+name+ " Encontrado");
+                return item;
+            }
+        }
+        logger.info("Item no encontrado");
         return null;
     }
     @Override
-    public int itemBuyByUser(String mail, String itemID) {
-        int index = searchUser(mail);
-        Item i = searchItem(itemID);
-
-        if(userList.get(index) == null){
-            logger.error("User "+ mail + " not registered");
-            return -1;
-        }
-
-        if(userList.get(index).getNumCoins() < i.getCoins()){
-            logger.warn("Insuficient coins to buy " + i.getName());
-            return -2;
-        }
-
-        else
-            userList.get(index).addItem(itemID);
-        logger.info("User " + mail + " bought: " + itemID);
-        return 0;
+    public int itemListSize(){
+        return this.itemList.size();
     }
-
     @Override
-    public List<String> getItemsByUser(String mail) {
-        return userList.get(searchUser(mail)).getItems();
+    public List<Item> getItemListUser(String username){
+        User user = this.getUser(username);
+        if(user == null){
+            logger.info("Lista de items de "+user.getName());
+            List<Item> list = user.getItemList();
+            return list;
+        }
+        else{
+            logger.info("Lista no encontrada");
+            return null;
+        }
     }
 }
+

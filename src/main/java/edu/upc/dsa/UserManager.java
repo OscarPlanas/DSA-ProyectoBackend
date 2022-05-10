@@ -6,12 +6,31 @@ import edu.upc.dsa.models.User;
 import java.util.List;
 
 public interface UserManager {
-    public int userRegister(String id, String name, String lastName, String pass, String bornDate, String mail);
-    public void userLogIn(String mail, String pass);
-    public int itemBuyByUser(String user, String itemID);
-    public List<String> getItemsByUser(String mail);
-    public List<Item> getListObjectsByPrice();
-    public void addItem(String name, double price, String desc);
-    public List<User> getUserList();
+
+
+    //Registro usuario
+    public User addUser(User user);
+    User getUser(String username);
+    //Eliminar usuario
+    public void deleteUser(String username);
+    //Login usuario
+    public void userLogIn(String username, String pass);
+    public List<User> getLoggedUsers();
+    public void logOutUser(String username);
+
+    //Ver usuario
+    public int userListSize();
+    public List<User> getAllUsers();
+
+    //Funciones de Item
+    public Item addItem(Item item);
+    public Item crearItem(String name, String descripcion, int precio);
+    public Item getItem(String name);
+    public int itemListSize();
+
+    public List<Item> getItemListUser(String username);
+
+
+
 
 }

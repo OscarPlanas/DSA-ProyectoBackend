@@ -1,6 +1,8 @@
 package edu.upc.dsa;
 
 import edu.upc.dsa.models.*;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import org.junit.*;
 
 import java.util.*;
@@ -8,28 +10,50 @@ import java.util.*;
 import static org.junit.Assert.assertEquals;
 
 public class UserManagerTest {
+    private static Logger logger = Logger.getLogger(UserManagerTest.class);
     UserManagerImpl manager;
-
+    User user;
     @Before
+    public void setUp() {
+        this.manager = UserManagerImpl.getInstance();
+        //Configuring Log4j
+        PropertyConfigurator.configure("src/main/resources/log4j.properties");
+        logger.debug("Debug Test Message!");
+        logger.info("Info Test Message!");
+        logger.warn("Warning Test Message!");
+        logger.error("Error Test Message!");
+        //Initialzing Test User
+        this.manager.addUser(new User("9876g", "Renuka", "Renu12","Renujeje" ,"renuka@gmail.com"));
+
+    }
+    @Test
+    public void loginTest(){
+        manager.userLogIn("EstheMC", "12345");
+        manager.userLogIn("Renujeje", "Renu12");
+    }
+    @Test
+    public void RegistroTest(){
+        this.manager.addUser(new User("20297698P", "Esther", "12345", "EstheMC", "esther@gmail.com"));
+    }
+   /* @Before
     public void setUp(){
         manager = UserManagerImpl.getInstance();
-        manager.userRegister("41536799R","Miquel","Garcia Salva","1234t","04/03/1998","miquel@gmail.com");
-        manager.userRegister("56743298Y","Barto", "Garcia Salva", "6543r", "08/11/2001","barto@gmail.com");
-        manager.addItem("Cola",2.2,"Refresc");
-        manager.addItem("Pan",1,"Barra de pa");
-        manager.addItem("Empanada",3,"Empanada de carn");
-        manager.addItem("Tarta",3.5,"Tarta de chocolata");
+        manager.addUser("41536799R","Miquel","1234t");
+        manager.addUser("56743298Y","Barto", "6543r");
     }
 
     @Test
-    public void testUserItems(){
-        List<User> users = manager.getUserList();
-        List<Item> items = manager.getListObjectsByPrice();
-        assertEquals("Barto",users.get(0).getName());
-        assertEquals("Miquel", users.get(1).getName());
-        manager.itemBuyByUser("barto@gmail.com","Cola");
-        manager.itemBuyByUser("miqeul@gmail.com","Tarta");
-        manager.itemBuyByUser("barto@gmail.com","Pan");
-        assertEquals(2,manager.getItemsByUser("barto@gmail.com").size());
+    public void addUserTest(){
+        //Adding a user to the GameManager
+        //manager.addUser(user.getId(),user.getName(),user.getPassword());
+        //Adding a second user to the GameManager
+        manager.addUser("abc","Toni","Oller");
+
     }
+
+    @After
+    public void tearDown() {
+        manager.getInstance().clear();
+        manager.delete();
+    }*/
 }

@@ -5,10 +5,12 @@ public class Item {
     private String description;
     private double coins;
 
-    public Item(double price, String name, String desc){
-        this.coins = price;
+    public Item(String name, String descripcion, double price){
         this.name = name;
-        this.description = desc;
+        this.description = descripcion;
+        this.coins = price;
+    }
+    public Item(){
     }
 
     public String getName() {

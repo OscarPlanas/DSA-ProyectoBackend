@@ -8,7 +8,6 @@ import java.util.*;
 
 public class UserManagerImpl implements UserManager {
     private List<User> userList;
-    private List<Item> itemList;
     private List<User> onlineUsersList;
     private HashMap<String, User> mapUser;
     private static UserManagerImpl instance;
@@ -17,7 +16,6 @@ public class UserManagerImpl implements UserManager {
 
     private UserManagerImpl() {
         this.userList = new LinkedList<>();
-        this.itemList = new LinkedList<>();
         this.onlineUsersList = new LinkedList<>();
     }
 
@@ -46,6 +44,7 @@ public class UserManagerImpl implements UserManager {
         return user;
     }
 
+    //Get de un usuario
     @Override
     public User getUser(String username) {
         logger.info("Usuario: " + username);
@@ -59,6 +58,7 @@ public class UserManagerImpl implements UserManager {
         return null;
     }
 
+    //Login de un usuario
     @Override
     public void userLogIn(String username, String pass) {
         User u = this.getUser(username);
@@ -72,11 +72,13 @@ public class UserManagerImpl implements UserManager {
         }
     }
 
+    //Get de usuarios logueados
     @Override
     public List<User> getLoggedUsers() {
         return onlineUsersList;
     }
 
+    //Desloguear
     @Override
     public void logOutUser(String username) {
         User u = this.getUser(username);
@@ -88,14 +90,7 @@ public class UserManagerImpl implements UserManager {
         }
     }
 
-    private int searchUser(String name) {
-        for (User u : userList) {
-            if (u.getName().equals(name))
-                return userList.indexOf(u);
-        }
-        return -1;
-    }
-
+    //Eliminamos usuario a través del username
     @Override
     public void deleteUser(String username) {
         User user = this.getUser(username);
@@ -106,54 +101,32 @@ public class UserManagerImpl implements UserManager {
             logger.info("Usuario " + username + " eliminado");
         }
     }
+    //Get de todos los usuarios
     @Override
     public List<User> getAllUsers(){
         return this.userList;
     }
 
+    //Retorna tamaño de la lista de usuarios
     @Override
     public int userListSize() {
         return this.userList.size();
     }
+    //Updateamos usuario, cambiamos la contraseña
+    @Override
+    public User changePassword(User u){
+        User user = this.getUser(u.getUsername());
+        if(u!=null){
+            logger.info("Usuario a updatear: "+ u.getUsername());
+            user.setUsername(u.getUsername());
+            user.setPassword(u.getPassword());
+            logger.info("Usuario updateado: "+user.getUsername());
+        }
+        else {
+            logger.info("Usuario "+u.getUsername()+" no encontrado");
+        }
+        return user;
+    }
 
-    @Override
-    public Item addItem(Item item){
-        logger.info("Item nuevo "+ item.getName() +": " + item.getDescription());
-        this.itemList.add(item);
-        logger.info("Nuevo item añadido: "+item);
-        return item;
-    }
-    @Override
-    public Item crearItem(String name, String descripcion, int precio){
-        return this.addItem(new Item(name,descripcion,precio));
-    }
-    @Override
-    public Item getItem(String name){
-        for(Item item: this.itemList){
-            if(item.getName().equals(name)){
-                logger.info("Item "+name+ " Encontrado");
-                return item;
-            }
-        }
-        logger.info("Item no encontrado");
-        return null;
-    }
-    @Override
-    public int itemListSize(){
-        return this.itemList.size();
-    }
-    @Override
-    public List<Item> getItemListUser(String username){
-        User user = this.getUser(username);
-        if(user == null){
-            logger.info("Lista de items de "+user.getName());
-            List<Item> list = user.getItemList();
-            return list;
-        }
-        else{
-            logger.info("Lista no encontrada");
-            return null;
-        }
-    }
 }
 

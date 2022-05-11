@@ -3,12 +3,12 @@ package edu.upc.dsa.models;
 public class Item {
     private String name;
     private String description;
-    private double coins;
+    private int coins;
 
-    public Item(String name, String descripcion, double price){
+    public Item(String name, String descripcion, int coins){
         this.name = name;
         this.description = descripcion;
-        this.coins = price;
+        this.coins = coins;
     }
     public Item(){
     }
@@ -29,11 +29,11 @@ public class Item {
         this.description = description;
     }
 
-    public double getCoins() {
+    public int getCoins() {
         return coins;
     }
 
-    public void setCoins(double coins) {
-        this.coins = coins;
+    public int setCoins(int coins) {
+        return this.coins = coins;
     }
 }

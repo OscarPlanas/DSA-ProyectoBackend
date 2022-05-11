@@ -17,8 +17,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-@Api(value = "/game", description = "Endpoint to User Service")
-@Path("/game")
+@Api(value = "/user", description = "Endpoint to User Service")
+@Path("/user")
 public class UserServices {
 
     private UserManager manager;
@@ -40,7 +40,7 @@ public class UserServices {
 
     //Login de usuario
     @POST
-    @ApiOperation(value = "Login usuario", notes = "Contraseña")
+    @ApiOperation(value = "Login usuario", notes = "Password")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful", response = User.class),
             @ApiResponse(code = 500, message = "Validation Error"),
@@ -64,7 +64,7 @@ public class UserServices {
 
     //Registro de usuario
     @POST
-    @ApiOperation(value = "Registrar nuevo usuario", notes = "Nombre y contraseña")
+    @ApiOperation(value = "Registrar nuevo usuario", notes = "Nombre y password")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful", response = User.class),
             @ApiResponse(code = 500, message = "Validation Error")
@@ -103,6 +103,7 @@ public class UserServices {
     }
 
     //Get lista de items de un usuario
+    //Falta acabar de implementarla
     @GET
     @ApiOperation(value = "Get Item list", notes = "Get Item por username")
     @ApiResponses(value = {
@@ -123,6 +124,39 @@ public class UserServices {
             return Response.status(201).entity(entity).build();
         }
     }
+    //Eliminar un usuario
+    @DELETE
+    @ApiOperation(value = "Delete a user", notes = "Eliminar usuario por username")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful"),
+            @ApiResponse(code = 404, message = "User not found")
+    })
+    @Path("/delete/{username}")
+    public Response deleteUser(@PathParam("username") String username) {
 
+        User user = this.manager.getUser(username);
+        if(user.getUsername() != null){
+            manager.deleteUser(username);
+            return Response.status(200).entity(user).build();
+        }
+        return Response.status(404).build();
+    }
+
+    @PUT
+    @ApiOperation(value = "Update a user", notes = "Updatear un usuario")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful"),
+            @ApiResponse(code = 404, message = "Username no encontrado")
+    })
+    @Path("/update/{username}")
+    public Response changePassword(User u) {
+        User user = this.manager.changePassword(u);
+        if(user.getUsername() == null){
+            return Response.status(404).build();
+        }
+        else {
+            return Response.status(201).build();
+        }
+    }
 
 }

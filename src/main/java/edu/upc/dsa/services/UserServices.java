@@ -69,7 +69,7 @@ public class UserServices {
             @ApiResponse(code = 201, message = "Successful", response = User.class),
             @ApiResponse(code = 500, message = "Validation Error")
     })
-    @Path("/añadir")
+    @Path("/add")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addUser(User u) {
         User user = new User(u.getId(), u.getName(), u.getPassword(), u.getUsername(), u.getMail());

@@ -3,9 +3,10 @@ package edu.upc.dsa.models;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 public class User {
-    private String id;
+    private String id; //
     private String name;
     private String password;
     private String username;
@@ -14,6 +15,8 @@ public class User {
     //private double numCoins;
    // private List<String> items;
     public User(String id, String name, String pass, String username, String mail) {
+        Random rand = new Random();
+
         this.id = id;
         this.name = name;
         this.password = pass;

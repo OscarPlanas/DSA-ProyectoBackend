@@ -72,7 +72,7 @@ public class UserServices {
     @Path("/añadir")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addUser(User u) {
-        User user = new User(u.getName(), u.getPassword(), u.getMail(), u.getUsername(), u.getId());
+        User user = new User(u.getId(), u.getName(), u.getPassword(), u.getUsername(), u.getMail());
         if (user.getUsername().equals("") || user.getPassword().equals("")) {
             return Response.status(500).build();
         }
@@ -105,6 +105,7 @@ public class UserServices {
     //Get lista de items de un usuario
     //Falta acabar de implementarla
     @GET
+
     @ApiOperation(value = "Get Item list", notes = "Get Item por username")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful", response = User.class, responseContainer = "Lista"),

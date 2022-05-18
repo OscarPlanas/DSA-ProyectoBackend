@@ -60,15 +60,18 @@ public class UserManagerImpl implements UserManager {
 
     //Login de un usuario
     @Override
-    public void userLogIn(String username, String pass) {
+    public User userLogIn(String username, String pass) {
         User u = this.getUser(username);
         if (u == null) {
             logger.info("Este usuario no existe");
+            return null;
         } else if (u.getPassword().equals(pass)) {
             this.onlineUsersList.add(u);
             logger.info("Usuario " + username + " ha podido entrar correctamente");
+            return u;
         } else {
             logger.info("Contraseña incorrecta");
+            return null;
         }
     }
 

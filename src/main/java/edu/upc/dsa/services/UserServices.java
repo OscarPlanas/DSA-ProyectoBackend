@@ -37,8 +37,7 @@ public class UserServices {
             u2.addItem(i2);
         }
     }
-
-    //Login de usuario
+    /*//Login de usuario
     @POST
     @ApiOperation(value = "Login usuario", notes = "Password")
     @ApiResponses(value = {
@@ -48,7 +47,7 @@ public class UserServices {
 
     })
 
-    @Path("/User/{username}/{password}")
+   @Path("/User/{username}/{password}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response userLogIn(@PathParam("username") String username, @PathParam("password") String password) {
         User u = this.manager.getUser(username);
@@ -60,6 +59,25 @@ public class UserServices {
             return Response.status(201).entity(u).build();
         } else
             return Response.status(500).build();
+    }*/
+    //Login de usuario
+    @POST
+    @ApiOperation(value = "Login usuario", notes = "Password")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful", response = User.class),
+            @ApiResponse(code = 404, message = "User not found")
+
+    })
+
+    @Path("/login")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response userLogIn(CredentialsLogIn credLogin) {
+        User u = this.manager.userLogIn(credLogin.getUsername(), credLogin.getPassword());
+
+        if (u != null) {
+            return Response.status(201).entity(u).build();
+        } else
+            return Response.status(404).build();
     }
 
     //Registro de usuario

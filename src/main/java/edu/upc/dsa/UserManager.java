@@ -16,7 +16,7 @@ public interface UserManager {
     public void deleteUser(String username);
 
     //Login usuario
-    public void userLogIn(String username, String pass);
+    public User userLogIn(String username, String pass);
     public List<User> getLoggedUsers();
     public void logOutUser(String username);
 

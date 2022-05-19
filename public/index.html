@@ -40,19 +40,41 @@
 					}
 				});
 			}
+			function login() {
+			var data = {"password": $("#li_password").val(),
+						"username": $("#li_username").val()}
+				$.ajax({
+					type:'POST',
+					url:'http://localhost:8080/dsaApp/user/login',
+					contentType: "application/json; charset=utf-8",
+					dataType: 'json',
+					data: JSON.stringify(data),
+					success: function () {
+						alert("Te has loguedo con exito")
+					}
+				});
+			}
 			function getItems() {
 				$.ajax({
 					type:'GET',
 					url:'http://localhost:8080/dsaApp/store/get',
 					dataType: 'json',
 					success: function (data) {
+						data.forEach(function1)
 					}
 				});
 			}
-			function registro2() {
-			$.post("http://localhost:8080/dsaApp/user/añadir", function(data, status){
-				alert("Funciona");
-			});
+			function function1(item, index) {
+				var repename = document.getElementById("Nombre_Objeto");
+				var repeprice = document.getElementById("item_precio");
+				const element = document.getElementById("items_cards");
+				const element1 = document.getElementById("each_item_card");
+				element.innerHTML += element1.innerHTML;
+				repename.id = Nombre_Objeto + index;
+				repeprice.id = item_precio + index;
+				document.getElementById("Nombre_Objeto").innerHTML = item.name;
+				let precio = item.coins + "€";
+				document.getElementById("item_precio").innerHTML = precio;
 			}
 	</script>
 	</head>
@@ -63,15 +85,15 @@
 			<div class="login-div">
 				<!-- USERNAME INPUT -->
 				<label class="login-label" id="username" for="username">Username</label><br>
-				<input class="login-input" type="text" placeholder="Enter Username">
+				<input class="login-input" id="li_username" type="text" placeholder="Enter Username">
 			</div>
 			<div class="login-div">
 				<!-- PASSWORD INPUT -->
 				<label class="login-label">Password</label><br>
-				<input class="login-input" type="password" placeholder="Enter Password">
+				<input class="login-input" id="li_password" type="password" placeholder="Enter Password">
 			</div>
-        <button class="login-button">Sign In</button>
-        <button type="submit" data-bs-toggle="modal" data-bs-target="#exampleModal" class="signup-button">Sign Up</button>
+        <button onclick="login()" class="login-button">Sign In</button>
+        <button data-bs-toggle="modal" data-bs-target="#exampleModal" class="signup-button">Sign Up</button>
 		</div>
         <!--<a class="login-href" style="text-align: left;" href="#">Forgot your Password?</a>-->
     </div>
@@ -121,7 +143,7 @@
 					<a class="nav-link active" data-bs-toggle="tab" href="#home">What's new</a>
 				</li>
 				<li class="nav-item">
-				<a class="nav-link" data-bs-toggle="tab" href="#menu1">Shop</a>
+				<a class="nav-link" onclick="getItems()" data-bs-toggle="tab" href="#menu1">Shop</a>
 					</li>
 				<li class="nav-item">
 					<a class="nav-link" data-bs-toggle="tab" href="#menu2">Developers</a>
@@ -137,14 +159,15 @@
 				</div>
 				<div id="menu1" class="container tab-pane fade"><br>
 					<h3>Shop</h3>
-					<div class="row">
-						<div align="center" class="shop-box" style="margin: 5px; max-width: 30%">
-								<img style="float:center; width:90%; height: 40%; margin-top: 30px" src="img/Prueba.jpg"/>
+					<div id="items_cards" class="row">
+					<div id="each_item_card">
+						<div id="item_card" align="center" class="shop-box" style="margin: 5px; width: 30%">
+							<img style="float:center; width:90%; height: 40%; margin-top: 30px" src="img/Prueba.jpg"/>
 							<div  style="margin-top: 10px; margin-bottom: 15px">
 								<span><strong id="Nombre_Objeto" style="font-size: 30px">LaserBlade</strong></span>
 							</div>
 							<div>
-								<span><strong style="font-size: 30px">50€</strong></span>
+								<span><strong id="item_precio" style="font-size: 30px">50€</strong></span>
 							</div>
 							<div style="display:flex; justify-content:center; margin-top: 15px">
 								<div style="display: flex; align-items: center;">
@@ -157,6 +180,7 @@
 							</div>
 							<button onclick="comprar()" style="border:none; font-size:20px; padding: 0 10px 5px 10px; border-radius: 4px; background-color: #4E9BC4; color: #FFFFFF; margin-top: 10px">Comprar</button>
 							
+						</div>
 						</div>
 					</div>
 				</div>

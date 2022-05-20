@@ -32,7 +32,7 @@
 						"mail": $("#su_email").val()}
 				$.ajax({
 					type:'POST',
-					url:'http://localhost:8080/dsaApp/user/add',
+					url:'/dsaApp/user/add',
 					contentType: "application/json; charset=utf-8",
 					dataType: 'json',
 					data: JSON.stringify(data),
@@ -45,7 +45,7 @@
 						"username": $("#li_username").val()}
 				$.ajax({
 					type:'POST',
-					url:'http://localhost:8080/dsaApp/user/login',
+					url:'/dsaApp/user/login',
 					contentType: "application/json; charset=utf-8",
 					dataType: 'json',
 					data: JSON.stringify(data),
@@ -57,7 +57,7 @@
 			function getItems() {
 				$.ajax({
 					type:'GET',
-					url:'http://localhost:8080/dsaApp/store/get',
+					url:'/dsaApp/store/get',
 					dataType: 'json',
 					success: function (data) {
 						data.forEach(function1)

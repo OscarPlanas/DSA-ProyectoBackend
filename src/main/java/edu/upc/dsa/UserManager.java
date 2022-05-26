@@ -25,6 +25,6 @@ public interface UserManager {
     public List<User> getAllUsers();
 
     //Updatear usuario
-    public User changePassword(User u);
+    public User changeName(User u);
 
     }

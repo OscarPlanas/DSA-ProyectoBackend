@@ -117,12 +117,12 @@ public class UserManagerImpl implements UserManager {
     }
     //Updateamos usuario, cambiamos la contraseña
     @Override
-    public User changePassword(User u){
+    public User changeName(User u){
         User user = this.getUser(u.getUsername());
         if(u!=null){
             logger.info("Usuario a updatear: "+ u.getUsername());
-            user.setUsername(u.getUsername());
-            user.setPassword(u.getPassword());
+            //user.setUsername(u.getUsername());
+            user.setName(u.getName());
             logger.info("Usuario updateado: "+user.getUsername());
         }
         else {

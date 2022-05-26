@@ -182,8 +182,8 @@ public class UserServices {
             @ApiResponse(code = 404, message = "Username no encontrado")
     })
     @Path("/update/{username}")
-    public Response changePassword(User u) {
-        User user = this.manager.changePassword(u);
+    public Response changeName(User u) {
+        User user = this.manager.changeName(u);
         if(user.getUsername() == null){
             return Response.status(404).build();
         }

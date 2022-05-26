@@ -120,6 +120,20 @@ public class UserServices {
        return Response.status(201).entity(entity).build();
     }
 
+    //Get de un usuario
+    @GET
+    @ApiOperation(value = "Get de un usuario", notes = "Get un usuario")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful", response = User.class, responseContainer = "Lista"),
+    })
+    @Path("/{username}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUser(@PathParam("username") String username) {
+        User user = this.manager.getUser(username);
+        GenericEntity<User> entity = new GenericEntity<User>(user){};
+        return Response.status(201).entity(entity).build();
+    }
+
     //Get lista de items de un usuario
     //Falta acabar de implementarla
     @GET

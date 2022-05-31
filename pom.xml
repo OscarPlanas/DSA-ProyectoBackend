@@ -22,6 +22,11 @@
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
+            <version>3.0.5</version>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/net.moznion/random-string -->
         <dependency>
             <groupId>net.moznion</groupId>

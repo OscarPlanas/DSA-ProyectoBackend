@@ -7,6 +7,7 @@ public class QueryHelper {
 
         StringBuffer sb = new StringBuffer("INSERT INTO ");
         sb.append(entity.getClass().getSimpleName()).append(" (");
+        System.out.println(entity.getClass().getSimpleName());
 
         for (String field: ObjectHelper.getFields(entity)) {
             sb.append(field + ",");

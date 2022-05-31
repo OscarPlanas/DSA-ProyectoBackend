@@ -24,12 +24,12 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public int addUser(String id, String name, String username, String password, String email) {
+    public int addUser(String name, String username, String password, String email) {
         int usuarioID = 0;
 
         try {
             Session UserDAO = FactorySession.openSession();
-            User usuario = new User(id, name, username, password, email);
+            User usuario = new User(name, username, password, email);
             UserDAO.save(usuario);
         } catch (Exception e) {
             // LOG
@@ -47,8 +47,15 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public User getUser(String username) {
+        try {
+            return ((User) session.getByParameter(User.class, "username", username));
+        } catch (Exception e) {
+            // LOG
+            return null;
+        } finally {
+            session.close();
+        }
 
-        return ((User) session.getByParameter(User.class, "username", username));
     }
 }
 

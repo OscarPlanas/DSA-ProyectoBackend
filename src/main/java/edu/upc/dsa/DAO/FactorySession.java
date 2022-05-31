@@ -22,7 +22,7 @@ public class FactorySession {
         Connection conn = null;
         try {
             conn =
-                    DriverManager.getConnection("jdbc:mysql://localhost/dsa3db",
+                    DriverManager.getConnection("jdbc:mariadb://localhost/dsa3db",
                             "root", "telematica");
 
         } catch (SQLException ex) {

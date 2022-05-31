@@ -16,6 +16,7 @@ public class ObjectHelper {
 
         for (Field f: fields) {
             sFields[i++]=f.getName();
+            System.out.println(f.getName());
         }
 
         return sFields;

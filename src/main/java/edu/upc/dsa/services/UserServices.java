@@ -27,8 +27,8 @@ public class UserServices {
     public UserServices() {
         this.manager = UserManagerImpl.getInstance();
         if (manager.userListSize() == 0) {
-            User u1 = this.manager.addUser(new User("20297698P", "Esther", "12345", "EstheMC", "esther@gmail.com"));
-            User u2 = this.manager.addUser(new User("08979711H", "Óscar", "Abcd", "ÓscarPL", "oscar@gmail.com"));
+            User u1 = this.manager.addUser(new User("Esther", "12345", "EstheMC", "esther@gmail.com"));
+            User u2 = this.manager.addUser(new User("Oscar", "Abcd", "ÓscarPL", "oscar@gmail.com"));
 
             Item i1 = new Item("Espada", "Para atacar", 50);
             Item i2 = new Item("Llave", "Abre una puerta", 100);
@@ -90,7 +90,7 @@ public class UserServices {
     @Path("/add")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addUser(User u) {
-        User user = new User(u.getId(), u.getName(), u.getPassword(), u.getUsername(), u.getMail());
+        User user = new User(u.getName(), u.getPassword(), u.getUsername(), u.getMail());
         if (user.getUsername().equals("") || user.getPassword().equals("")) {
             return Response.status(500).build();
         }
@@ -101,7 +101,6 @@ public class UserServices {
         }
         user.setMail(u.getMail());
         user.setName(u.getName());
-        user.setId(u.getId());
         this.manager.addUser(user);
         return Response.status(200).entity(user).build();
     }
@@ -136,7 +135,7 @@ public class UserServices {
 
     //Get lista de items de un usuario
     //Falta acabar de implementarla
-    @GET
+    /*@GET
 
     @ApiOperation(value = "Get Item list", notes = "Get Item por username")
     @ApiResponses(value = {
@@ -156,7 +155,7 @@ public class UserServices {
             GenericEntity<List<Item>> entity = new GenericEntity<List<Item>>(itemList){};
             return Response.status(201).entity(entity).build();
         }
-    }
+    }*/
     //Eliminar un usuario
     @DELETE
     @ApiOperation(value = "Delete a user", notes = "Eliminar usuario por username")

@@ -9,23 +9,29 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 	<script>
-			function myFunction() {
-				var a = parseInt(document.getElementById("Cantidad").textContent) + 1;
-				document.getElementById("Cantidad").textContent = a;
+		var user_name = null;
+			function myFunction(index) {
+				var a = parseInt(document.getElementById("Cantidad_" + index).textContent) + 1;
+				document.getElementById("Cantidad_" + index).textContent = a;
 			}
-			function myFunction1() {
-			if(parseInt(document.getElementById("Cantidad").textContent)>0)
-				var a = parseInt(document.getElementById("Cantidad").textContent) - 1;
+			function myFunction1(index) {
+			if(parseInt(document.getElementById("Cantidad_" + index).textContent)>0)
+				var a = parseInt(document.getElementById("Cantidad_" + index).textContent) - 1;
 				else
 				var a = 0;
-			document.getElementById("Cantidad").textContent = a;
+			document.getElementById("Cantidad_" + index).textContent = a;
 			}
-			function comprar(){
-				alert("Has comprado " + document.getElementById("Cantidad").textContent + " " + document.getElementById("Nombre_Objeto").textContent);
-				document.getElementById("Cantidad").textContent = 0;
+			function comprar(index){
+			if($("#Cantidad_" + index).text() == 0)
+				alert("Pon una cantidad primero");
+				else{
+				alert("Has comprado " + document.getElementById("Cantidad_" + index).textContent + " " + document.getElementById("Nombre_Objeto_" + index).textContent);
+				document.getElementById("Cantidad_" + index).textContent = 0;
+				}
 			}
 			function registro() {
-			var data = {"name": $("#su_name").val() + " " + $("#su_surname").val(),
+			var data = {"id": "eijfoewf",
+						"name": $("#su_name").val() + " " + $("#su_surname").val(),
 						"password": $("#su_password").val(),
 						"username": $("#su_username").val(),
 						"mail": $("#su_email").val()}
@@ -36,9 +42,12 @@
 					dataType: 'json',
 					data: JSON.stringify(data),
 					success: function () {
+						$("#create_an_account").attr("style","display:none");
+						$("#created_account").attr("style", "margin: 0 0 20px 30px; color: #513161");
 					}
 				});
 			}
+
 			function login() {
 			var data = {"password": $("#li_password").val(),
 						"username": $("#li_username").val()}
@@ -49,38 +58,57 @@
 					dataType: 'json',
 					data: JSON.stringify(data),
 					success: function () {
-						alert("Te has loguedo con exito")
+						user_name = $("#li_username").val();
+						$("#welcome_login").append('<span style="color: #6c088d">Welcome back, ' + $("#li_username").val() + '!<button onclick="logout()" style="margin-left: 10px" class="login-button">Log out</button></span>')
+						$("#log_in").attr("style","display:none");
+						$("#welcome_login").attr("style", "");
+						$("#shop_nav").attr("data-bs-toggle","tab");
+					},
+					error: function (jqXHR, exception) {
+						$("#incorrect_login").attr("style","");
+						setTimeout(function(){
+							$("#incorrect_login").attr("style","display:none");
+						}, 7000);
 					}
 				});
 			}
+			
+			function logout(){
+				window.location.reload();
+			}
+			
 			function getItems() {
+				if(user_name!=null){
 				$.ajax({
 					type:'GET',
 					url:'/dsaApp/store/get',
 					dataType: 'json',
 					success: function (data) {
-						data.forEach(function1)
+						data.forEach(function1);
 					}
 				});
+				}
+				else{
+					alert("Tienes que estas loguedo para acceder a la tienda");
+				}
+				$("#item_card").attr("style", "display:none")
 			}
-			function function1(item, index) {
+			function function1(item, index, array) {
 				var repename = document.getElementById("Nombre_Objeto");
 				var repeprice = document.getElementById("item_precio");
+				var cant = document.getElementById("cantidad");
 				const element = document.getElementById("items_cards");
-				const element1 = document.getElementById("each_item_card");
-				element.innerHTML += element1.innerHTML;
-				repename.id = Nombre_Objeto + index;
-				repeprice.id = item_precio + index;
-				document.getElementById("Nombre_Objeto").innerHTML = item.name;
-				let precio = item.coins + "€";
-				document.getElementById("item_precio").innerHTML = precio;
+				const element1 = document.getElementById("item_card");
+				$("#items_cards").append('<div id="item_card_' + index +'" align="center" class="shop-box" style="margin: 5px; width: 30%"><img style="float:center; width:90%; height: 40%; margin-top: 30px" src="img/Prueba.jpg"/><div  style="margin-top: 10px; margin-bottom: 15px"><span><strong id="Nombre_Objeto_' + index +'" style="font-size: 30px">' + item.name +'</strong></span></div><div><span><strong id="item_precio' + index + '" style="font-size: 30px">'+ item.coins +'€</strong></span></div><div style="display:flex; justify-content:center; margin-top: 15px"><div style="display: flex; align-items: center;"><img onclick="myFunction1(' + index + ')" id="menos_img_' + index + '" style="cursor:pointer; width:20px; height: 20px" src="img/menos.png"/></div><span id="Cantidad_' + index + '" style="display: flex; align-items: center; font-size:40px; padding-bottom: 4px" class="masmenos">0</span><div style="display: flex; align-items: center;"><img onclick="myFunction(' + index + ')" style="cursor:pointer; width:20px; height: 20px" src="img/mas.png"/></div></div><button onclick="comprar(' + index + ')" style="border:none; font-size:20px; padding: 0 10px 5px 10px; border-radius: 4px; background-color: #4E9BC4; color: #FFFFFF; margin-top: 10px">Comprar</button></div>');
 			}
 	</script>
 	</head>
 	<body>
     <header>
     <div class="login-hover-box">
-		<div class="login-userpass">
+		<div id="welcome_login" style="display:none">
+		</div>
+		<div id = "log_in" class="login-userpass">
 			<div class="login-div">
 				<!-- USERNAME INPUT -->
 				<label class="login-label" id="username" for="username">Username</label><br>
@@ -93,6 +121,9 @@
 			</div>
         <button onclick="login()" class="login-button">Sign In</button>
         <button data-bs-toggle="modal" data-bs-target="#exampleModal" class="signup-button">Sign Up</button>
+		</div>
+		<div id="incorrect_login" style="display:none">
+			<span style="font-size:12px; color: #850000; margin-left: 7px">Username or password is wrong</span>
 		</div>
         <!--<a class="login-href" style="text-align: left;" href="#">Forgot your Password?</a>-->
     </div>
@@ -142,7 +173,7 @@
 					<a class="nav-link active" data-bs-toggle="tab" href="#home">What's new</a>
 				</li>
 				<li class="nav-item">
-				<a class="nav-link" onclick="getItems()" data-bs-toggle="tab" href="#menu1">Shop</a>
+				<a id="shop_nav" class="nav-link" onclick="getItems()" href="#menu1">Shop</a>
 					</li>
 				<li class="nav-item">
 					<a class="nav-link" data-bs-toggle="tab" href="#menu2">Developers</a>
@@ -159,7 +190,6 @@
 				<div id="menu1" class="container tab-pane fade"><br>
 					<h3>Shop</h3>
 					<div id="items_cards" class="row">
-					<div id="each_item_card">
 						<div id="item_card" align="center" class="shop-box" style="margin: 5px; width: 30%">
 							<img style="float:center; width:90%; height: 40%; margin-top: 30px" src="img/Prueba.jpg"/>
 							<div  style="margin-top: 10px; margin-bottom: 15px">
@@ -178,8 +208,7 @@
 								</div>
 							</div>
 							<button onclick="comprar()" style="border:none; font-size:20px; padding: 0 10px 5px 10px; border-radius: 4px; background-color: #4E9BC4; color: #FFFFFF; margin-top: 10px">Comprar</button>
-							
-						</div>
+
 						</div>
 					</div>
 				</div>
@@ -191,10 +220,14 @@
 		</div>
 		<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
-				<div class="modal-content"  style="background-color: #A6B1CE; border-radius: 30px">
+				<div id="modal_register" class="modal-content"  style="background-color: #A6B1CE; border-radius: 30px">
 					<div align="right" style="margin: 20px 20px 0 0">
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
+					<div id="created_account" style="display:none">
+						<h1>Your account has been created :)</h1>
+					</div>
+					<div id="create_an_account">
 					<h3 style="margin-left: 30px; color: #513161"><strong>Register</strong></h3>
 					<div align="center" class="modal-body">
 						<div class="background-class">
@@ -234,7 +267,7 @@
 							<button onclick="registro()" id="create-account" style="margin: 6px 10px 0 0" type="submit" rel="import" class="create-account-button">Create account</button>
 						</div>
 					</div>
-
+					</div>
 				</div>
 			</div>
 		</div>

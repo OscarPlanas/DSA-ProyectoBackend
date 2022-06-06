@@ -28,9 +28,8 @@ public class UserDAOImpl implements UserDAO {
         int usuarioID = 0;
 
         try {
-            Session UserDAO = FactorySession.openSession();
             User usuario = new User(name, username, password, email);
-            UserDAO.save(usuario);
+            session.save(usuario);
         } catch (Exception e) {
             // LOG
         } finally {
@@ -56,6 +55,43 @@ public class UserDAOImpl implements UserDAO {
             session.close();
         }
 
+    }
+
+    @Override
+    public int userListSize() {
+        try {
+            session.size();
+        } catch (Exception e) {
+            // LOG
+        }
+        return 0;
+    }
+
+    @Override
+    public void deleteUser(String username) {
+        try {
+            Session UserDAO = FactorySession.openSession();
+            User usuario = this.getUser(username);
+            UserDAO.delete(usuario);
+        } catch (Exception e) {
+            // LOG
+        } finally {
+            session.close();
+        }
+    }
+
+    @Override
+    public boolean existsusername(String username) {
+        if(session.getByParameter(User.class, "username", username) == null){
+            return false;
+        }else return true;
+    }
+
+    @Override
+    public boolean existsmail(String email) {
+        if(session.getByParameter(User.class, "mail", email) == null){
+            return false;
+        }else return true;
     }
 }
 

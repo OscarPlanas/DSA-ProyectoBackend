@@ -9,7 +9,7 @@ public class TestBD {
     @Test
     public void testInsert() {
         UserDAO userDAO = UserDAOImpl.getInstance();
-        userDAO.addUser("aa", "bb", "cc", "cc@gmail.com");
+        userDAO.addUser("fsafasf", "afasf", "asfasf", "casfasfc@gmail.com");
     }
     @Test
     public void testSelect() {

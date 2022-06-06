@@ -156,8 +156,19 @@ public class SessionImpl implements Session {
 
     }
 
-    public void delete(Object object) {
+    public void delete(Object entity) {
+        String deleteQuery = QueryHelper.createQueryDELETE(entity);
+        String [] username = ObjectHelper.getFields(entity);
+        PreparedStatement pstm = null;
 
+        try {
+            pstm = conn.prepareStatement(deleteQuery);
+            pstm.setString(1, username[1]);
+            pstm.executeQuery();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public List<Object> findAll(Class theClass) {
@@ -201,5 +212,19 @@ public class SessionImpl implements Session {
             e.printStackTrace();
         }
         return objectResult;
+    }
+
+    @Override
+    public int size() {
+        String sizeQuery = QueryHelper.createQuerySIZEuser();
+        PreparedStatement pstm = null;
+
+        try {
+            pstm = conn.prepareStatement(sizeQuery);
+            pstm.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }

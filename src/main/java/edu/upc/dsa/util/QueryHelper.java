@@ -49,6 +49,17 @@ public class QueryHelper {
 
         return sb.toString();
     }
+    public static String createQueryDELETE(Object entity) {
+        StringBuffer sb = new StringBuffer("DELETE FROM ");
+        sb.append(entity.getClass().getSimpleName());
+        sb.append(" WHERE ID = ?");
+
+        return sb.toString();
+    }
+    public static String createQuerySIZEuser() {
+        StringBuffer sb = new StringBuffer("SELECT count(*) FROM user");
+        return sb.toString();
+    }
     public static String createQuerySELECTAll(Class theClass){
 
         StringBuffer sb = new StringBuffer("SELECT * FROM ");

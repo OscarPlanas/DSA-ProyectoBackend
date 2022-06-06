@@ -3,8 +3,8 @@ package edu.upc.dsa.services;
 
 
 
-import edu.upc.dsa.UserManager;
-import edu.upc.dsa.UserManagerImpl;
+import edu.upc.dsa.DAO.UserDAO;
+import edu.upc.dsa.DAO.UserDAOImpl;
 import edu.upc.dsa.models.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,21 +21,21 @@ import java.util.List;
 @Path("/user")
 public class UserServices {
 
-    private UserManager manager;
+    private UserDAO userDAO;
 
 
     public UserServices() {
-        this.manager = UserManagerImpl.getInstance();
-        if (manager.userListSize() == 0) {
-            User u1 = this.manager.addUser(new User("Esther", "12345", "EstheMC", "esther@gmail.com"));
-            User u2 = this.manager.addUser(new User("Oscar", "Abcd", "ÓscarPL", "oscar@gmail.com"));
+        this.userDAO = UserDAOImpl.getInstance();
+        /*if (userDAO.userListSize() == 0) {
+            this.userDAO.addUser("Esther", "EstheMC", "12345", "esther@gmail.com");
+            this.userDAO.addUser("Oscar", "Oscar", "123", "oscar@gmail.com");
 
             Item i1 = new Item("Espada", "Para atacar", 50);
             Item i2 = new Item("Llave", "Abre una puerta", 100);
 
-            u1.addItem(i1);
-            u2.addItem(i2);
-        }
+            //u1.addItem(i1);
+            //u2.addItem(i2);
+        }*/
     }
     /*//Login de usuario
     @POST
@@ -72,7 +72,7 @@ public class UserServices {
     @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response userLogIn(CredentialsLogIn credLogin) {
-        User u = this.manager.userLogIn(credLogin.getUsername(), credLogin.getPassword());
+        User u = this.userDAO.getUser(credLogin.getUsername());
 
         if (u != null) {
             return Response.status(201).entity(u).build();
@@ -85,24 +85,22 @@ public class UserServices {
     @ApiOperation(value = "Registrar nuevo usuario", notes = "Nombre y password")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful", response = User.class),
-            @ApiResponse(code = 500, message = "Validation Error")
+            @ApiResponse(code = 500, message = "Validation Error"),
+            @ApiResponse(code = 409, message = "User Already Exist")
     })
     @Path("/add")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addUser(User u) {
-        User user = new User(u.getName(), u.getPassword(), u.getUsername(), u.getMail());
-        if (user.getUsername().equals("") || user.getPassword().equals("")) {
+        if (u.getUsername().isEmpty() || u.getPassword().isEmpty()) {
             return Response.status(500).build();
+        }else if(userDAO.existsusername(u.getUsername()) || userDAO.existsmail(u.getMail())){
+            return Response.status(409).build();
+        }else{
+            u.setMail(u.getMail());
+            u.setName(u.getName());
+            this.userDAO.addUser(u.getName(), u.getUsername(), u.getPassword(), u.getMail());
+            return Response.status(201).entity(u).build();
         }
-        for (User us : this.manager.getAllUsers()) {
-            if (us.getUsername().equals(user.getUsername())) {
-                return Response.status(500).build();
-            }
-        }
-        user.setMail(u.getMail());
-        user.setName(u.getName());
-        this.manager.addUser(user);
-        return Response.status(200).entity(user).build();
     }
 
     //Get de la lista de usuarios
@@ -114,7 +112,7 @@ public class UserServices {
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllUsers() {
-       List<User> users = this.manager.getAllUsers();
+       List<User> users = this.userDAO.getAllUsers();
        GenericEntity<List<User>> entity = new GenericEntity<List<User>>(users){};
        return Response.status(201).entity(entity).build();
     }
@@ -128,7 +126,7 @@ public class UserServices {
     @Path("/{username}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUser(@PathParam("username") String username) {
-        User user = this.manager.getUser(username);
+        User user = this.userDAO.getUser(username);
         GenericEntity<User> entity = new GenericEntity<User>(user){};
         return Response.status(201).entity(entity).build();
     }
@@ -166,15 +164,15 @@ public class UserServices {
     @Path("/delete/{username}")
     public Response deleteUser(@PathParam("username") String username) {
 
-        User user = this.manager.getUser(username);
+        User user = this.userDAO.getUser(username);
         if(user.getUsername() != null){
-            manager.deleteUser(username);
+            userDAO.deleteUser(username);
             return Response.status(200).entity(user).build();
         }
         return Response.status(404).build();
     }
 
-    @PUT
+    /*@PUT
     @ApiOperation(value = "Update a user", notes = "Updatear un usuario")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful"),
@@ -182,13 +180,15 @@ public class UserServices {
     })
     @Path("/update/{username}")
     public Response changeName(User u) {
-        User user = this.manager.changeName(u);
+        User user = this.userDAO.changeName(u);
         if(user.getUsername() == null){
             return Response.status(404).build();
         }
         else {
             return Response.status(201).build();
         }
-    }
+    }*/
+
+
 
 }

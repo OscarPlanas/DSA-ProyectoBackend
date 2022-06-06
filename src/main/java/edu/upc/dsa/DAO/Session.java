@@ -14,7 +14,7 @@ public interface Session<E> {
     List<Object> findAll(Class theClass);
     List<Object> findAll(Class theClass, HashMap params);
     List<Object> queryObjects(Class theClass);
-
+    int size();
     Object getByParameter(Class theCass, String byParameter, Object byParameterValue);
 
 }

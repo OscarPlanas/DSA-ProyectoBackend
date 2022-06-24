@@ -2,9 +2,17 @@ package edu.upc.dsa.services;
 
 
 
+import edu.upc.dsa.DAO.*;
+import edu.upc.dsa.UserManager;
+import edu.upc.dsa.UserManagerImpl;
 
+import io.swagger.annotations.*;
+
+
+import edu.upc.dsa.DAO.ItemDAO;
 import edu.upc.dsa.DAO.UserDAO;
 import edu.upc.dsa.DAO.UserDAOImpl;
+import edu.upc.dsa.DAO.InventoryDAO;
 import edu.upc.dsa.models.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -22,10 +30,16 @@ import java.util.List;
 public class UserServices {
 
     private UserDAO userDAO;
-
+    private InventoryDAO inventoryDAO;
+    private ItemDAO itemDAO;
+    private GameDAO gameDAO;
 
     public UserServices() {
         this.userDAO = UserDAOImpl.getInstance();
+        this.inventoryDAO = InventoryDAOImpl.getInstance();
+        this.itemDAO = ItemDAOImpl.getInstance();
+        this.gameDAO = GameDAOImpl.getInstance();
+
         /*if (userDAO.userListSize() == 0) {
             this.userDAO.addUser("Esther", "EstheMC", "12345", "esther@gmail.com");
             this.userDAO.addUser("Oscar", "Oscar", "123", "oscar@gmail.com");
@@ -37,29 +51,7 @@ public class UserServices {
             //u2.addItem(i2);
         }*/
     }
-    /*//Login de usuario
-    @POST
-    @ApiOperation(value = "Login usuario", notes = "Password")
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Successful", response = User.class),
-            @ApiResponse(code = 500, message = "Validation Error"),
-            @ApiResponse(code = 404, message = "User not found")
 
-    })
-
-   @Path("/User/{username}/{password}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response userLogIn(@PathParam("username") String username, @PathParam("password") String password) {
-        User u = this.manager.getUser(username);
-
-        if (u == null) {
-            return Response.status(404).build();
-        } else if (u.getPassword().equals(password)) {
-            this.manager.userLogIn(username, password);
-            return Response.status(201).entity(u).build();
-        } else
-            return Response.status(500).build();
-    }*/
     //Login de usuario
     @POST
     @ApiOperation(value = "Login usuario", notes = "Password")
@@ -158,36 +150,68 @@ public class UserServices {
     @DELETE
     @ApiOperation(value = "Delete a user", notes = "Eliminar usuario por username")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successful"),
+            @ApiResponse(code = 201, message = "Successful"),
             @ApiResponse(code = 404, message = "User not found")
     })
     @Path("/delete/{username}")
     public Response deleteUser(@PathParam("username") String username) {
 
-        User user = this.userDAO.getUser(username);
-        if(user.getUsername() != null){
-            userDAO.deleteUser(username);
+        User user = userDAO.getUser(username);
+        if(userDAO.existsusername(username)){
+            userDAO.deleteUserByUsername(username);
+            inventoryDAO.deleteInventoryByUsername(username);
             return Response.status(200).entity(user).build();
         }
         return Response.status(404).build();
     }
 
-    /*@PUT
+    //Updateamos un usuario
+    @PUT
     @ApiOperation(value = "Update a user", notes = "Updatear un usuario")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Successful"),
-            @ApiResponse(code = 404, message = "Username no encontrado")
+            @ApiResponse(code = 201, message = "Successful", response = User.class),
+            @ApiResponse(code = 404, message = "Usuario no encontrado"),
+            @ApiResponse(code = 406, message = "Usuario en uso"),
+            @ApiResponse(code = 409, message = "Mail en uso"),
+            @ApiResponse(code = 500, message = "Datos erroneos")
     })
     @Path("/update/{username}")
-    public Response changeName(User u) {
-        User user = this.userDAO.changeName(u);
-        if(user.getUsername() == null){
+    public Response updateUser(@PathParam("username") String oldUsername, RegisterCredentials rCr) {
+
+        User oldUser = userDAO.getUser(oldUsername);
+
+        if (!userDAO.existsusername(oldUsername)) {
             return Response.status(404).build();
+        } else {
+            //User newUser = new User(rCr.getName(), rCr.getPassword(), rCr.getUsername(), rCr.getMail());
+            if (rCr.getName().isEmpty() && rCr.getPassword().isEmpty() && rCr.getUsername().isEmpty() && rCr.getMail().isEmpty())
+                return Response.status(500).build();
+            else {
+                /*if (rCr.getName().isEmpty())
+                    newUser.setName(oldUser.getName());
+                if (rCr.getPassword().isEmpty())
+                    newUser.setPassword(oldUser.getPassword());
+                if (rCr.getUsername().isEmpty())
+                    newUser.setUsername(oldUsername);
+                if (rCr.getMail().isEmpty())
+                    newUser.setMail(oldUser.getMail());*/
+                if (!oldUsername.equals(rCr.getUsername()) && userDAO.existsusername(rCr.getUsername()))
+                    return Response.status(406).build();
+                if (!oldUser.getMail().equals(rCr.getMail()) && userDAO.existsmail(rCr.getMail()))
+                    return Response.status(409).build();
+                else {
+
+                   return null;
+                    /*userDAO.updateUserParameters(oldUsername, newUser);
+                    inventoryDAO.updateUsername(oldUsername, newUser);
+                    if (gameDAO.existsUsername(oldUsername))
+                        gameDAO.updateUsername(oldUsername, newUser);
+                    return Response.status(200).entity(newUser).build();*/
+                }
+
+            }
         }
-        else {
-            return Response.status(201).build();
-        }
-    }*/
+    }
 
 
 

@@ -23,6 +23,23 @@ public class ObjectHelper {
 
     }
 
+    public static String getID(Object entity) {
+
+        Class theClass = entity.getClass();
+
+        Field[] fields = theClass.getDeclaredFields();
+
+        String id = new String();
+
+        try {
+            id = String.valueOf(fields[0].getInt(entity));
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        return id;
+    }
+
     private static String getSetter(String property){
         return "set"+property.substring(0,1).toUpperCase() + property.substring(1);
     }

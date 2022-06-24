@@ -1,14 +1,16 @@
 package edu.upc.dsa.util;
-
+import edu.upc.dsa.DAO.SessionImpl;
+import org.apache.log4j.Logger;
 
 public class QueryHelper {
+    final static Logger logger = Logger.getLogger(SessionImpl.class);
 
     public static String createQueryINSERT(Object entity) {
 
         StringBuffer sb = new StringBuffer("INSERT INTO ");
         sb.append(entity.getClass().getSimpleName()).append(" (");
-        System.out.println(entity.getClass().getSimpleName());
-
+        System.out.println(entity.getClass().getSimpleName() + "------------------------");
+        logger.info("++++++++++++++" + entity.getClass().getSimpleName() + "++++++++++++");
         for (String field: ObjectHelper.getFields(entity)) {
             sb.append(field + ",");
         }
@@ -23,6 +25,7 @@ public class QueryHelper {
 
         return sb.toString();
     }
+
     /*StringBuffer sb = new StringBuffer("INSERT INTO ");
         sb.append("users").append(" ");
         //sb.append(entity.getClass().getSimpleName()).append(" ");
@@ -49,6 +52,7 @@ public class QueryHelper {
 
         return sb.toString();
     }
+
     public static String createQueryDELETE(Object entity) {
         StringBuffer sb = new StringBuffer("DELETE FROM ");
         sb.append(entity.getClass().getSimpleName());
@@ -56,10 +60,31 @@ public class QueryHelper {
 
         return sb.toString();
     }
+
+    public static String createQueryDELETEbyParameter(Class theClass, String parameter){
+
+        StringBuffer sb = new StringBuffer("DELETE FROM ");
+        sb.append(theClass.getSimpleName());
+        sb.append(" WHERE " + parameter + " = ?");
+
+        return sb.toString();
+    }
+
+    public static String createQueryDELETEbyTwoParameters(Class theClass, String byFirstParameter, String bySecondParameter){
+
+        StringBuffer sb = new StringBuffer("DELETE FROM ");
+        sb.append(theClass.getSimpleName());
+        sb.append(" WHERE " + byFirstParameter + " = ?");
+        sb.append(" AND " + bySecondParameter + " = ?");
+
+        return sb.toString();
+    }
+
     public static String createQuerySIZEuser() {
         StringBuffer sb = new StringBuffer("SELECT count(*) FROM user");
         return sb.toString();
     }
+
     public static String createQuerySELECTAll(Class theClass){
 
         StringBuffer sb = new StringBuffer("SELECT * FROM ");
@@ -76,5 +101,93 @@ public class QueryHelper {
 
         return sb.toString();
     }
+    public static String createQuerySELECTbyTwoParameters(Class theClass, String byFirstParameter, String bySecondParameter) {
 
+        StringBuffer sb = new StringBuffer("SELECT * FROM ");
+        sb.append(theClass.getSimpleName());
+        sb.append(" WHERE " + byFirstParameter + " = ?");
+        sb.append(" AND " + bySecondParameter + " = ?");
+
+        return sb.toString();
+    }
+
+    public static String createQuerySELECTParameterByParameter(Class theClass, String parameter, String byParameter) {
+
+        StringBuffer sb = new StringBuffer("SELECT " + parameter + " FROM ");
+        sb.append(theClass.getSimpleName());
+        sb.append(" WHERE " + byParameter + " = ?");
+
+        return sb.toString();
+    }
+
+    public static String createQueryORDERbyParameter(Class theClass, String byParameter) {
+
+        StringBuffer sb = new StringBuffer("SELECT * FROM ");
+        sb.append(theClass.getSimpleName());
+        sb.append(" ORDER BY " + byParameter + " DESC");
+
+        return sb.toString();
+    }
+
+    public static String createQueryUPDATE(Object entity) {
+
+        StringBuffer sb = new StringBuffer("UPDATE ");
+        sb.append(entity.getClass().getSimpleName()).append(" SET");
+
+        for (String field: ObjectHelper.getFields(entity)) {
+            sb.append(" " + field).append(" = ?,");
+        }
+        sb.deleteCharAt(sb.length() - 1);
+        sb.append(" WHERE ID = ?");
+
+        return sb.toString();
+    }
+
+    public static String createQueryUPDATEbyParameter(Object entity, String parameter) {
+
+        StringBuffer sb = new StringBuffer("UPDATE ");
+        sb.append(entity.getClass().getSimpleName()).append(" SET");
+
+        for (String field: ObjectHelper.getFields(entity)) {
+            sb.append(" " + field).append(" = ?,");
+        }
+        sb.deleteCharAt(sb.length() - 1);
+        sb.append(" WHERE " + parameter + " = ?");
+
+        return sb.toString();
+    }
+
+    public static String createQueryUPDATEbyTwoParameters(Object entity, String byFirstParameter, String bySecondParameter) {
+
+        StringBuffer sb = new StringBuffer("UPDATE ");
+        sb.append(entity.getClass().getSimpleName()).append(" SET");
+
+        for (String field: ObjectHelper.getFields(entity)) {
+            sb.append(" " + field).append(" = ?,");
+        }
+        sb.deleteCharAt(sb.length() - 1);
+        sb.append(" WHERE " + byFirstParameter + " = ?");
+        sb.append(" AND " + bySecondParameter + " = ?");
+
+        return sb.toString();
+    }
+
+    public static String createQueryUPDATEParameterByParameter(Class theClass, String parameter, String byParameter) {
+
+        StringBuffer sb = new StringBuffer("UPDATE ");
+        sb.append(theClass.getSimpleName() + " SET " + parameter + " = ?");
+        sb.append(" WHERE " + byParameter + " = ?");
+
+        return sb.toString();
+    }
+
+    public static String createQueryUPDATEParameterByTwoParameters(Class theClass, String parameter, String byFirstParameter, String bySecondParameter) {
+
+        StringBuffer sb = new StringBuffer("UPDATE ");
+        sb.append(theClass.getSimpleName() + " SET " + parameter + " = ?");
+        sb.append(" WHERE " + byFirstParameter + " = ?");
+        sb.append(" AND " + bySecondParameter + " = ?");
+
+        return sb.toString();
+    }
 }

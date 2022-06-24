@@ -64,6 +64,13 @@ public class InventoryDAOImpl implements InventoryDAO {
     }
 
     @Override
+    public void addInventory(String username, String NameItem) {
+        Object o = session.getParameterByParameter(User.class, "id", "username", username);
+        Inventory in = new Inventory(, NameItem, 0);
+        session.create(in);
+    }
+
+    @Override
     public boolean existsInventoryByUserNameAndItemName(String userName, String itemName) {
         if (session.getByTwoParameters(Inventory.class, "userName", userName, "itemName", itemName) == null)
             return false;

@@ -88,8 +88,13 @@ public class UserServices {
         }else if(userDAO.existsusername(u.getUsername()) || userDAO.existsmail(u.getMail())){
             return Response.status(409).build();
         }else{
-            u.setMail(u.getMail());
-            u.setName(u.getName());
+            List<Item> listitem = itemDAO.getAllItems();
+            for(Item it : listitem)
+            {
+                    inventoryDAO.addInventory(u.getUsername(), it.getName());
+            }
+            //u.setMail(u.getMail());
+            //u.setName(u.getName());
             this.userDAO.addUser(u.getName(), u.getUsername(), u.getPassword(), u.getMail());
             return Response.status(201).entity(u).build();
         }
@@ -179,23 +184,14 @@ public class UserServices {
     public Response updateUser(@PathParam("username") String oldUsername, RegisterCredentials rCr) {
 
         User oldUser = userDAO.getUser(oldUsername);
-        User changedUser = new User(rCr.getName(), rCr.getUsername(), rCr.getPassword(), rCr.getMail());
+        User changedUser = new User(rCr.getName(), rCr.getUsername(), rCr.getPassword(), rCr.getMail(), oldUser.getCoins());
 
         if (!userDAO.existsusername(oldUsername)) {
             return Response.status(404).build();
         } else {
-            //User newUser = new User(rCr.getName(), rCr.getPassword(), rCr.getUsername(), rCr.getMail());
             if (rCr.getName().isEmpty() && rCr.getPassword().isEmpty() && rCr.getUsername().isEmpty() && rCr.getMail().isEmpty())
                 return Response.status(500).build();
             else {
-                /*if (rCr.getName().isEmpty())
-                    newUser.setName(oldUser.getName());
-                if (rCr.getPassword().isEmpty())
-                    newUser.setPassword(oldUser.getPassword());
-                if (rCr.getUsername().isEmpty())
-                    newUser.setUsername(oldUsername);
-                if (rCr.getMail().isEmpty())
-                    newUser.setMail(oldUser.getMail());*/
                 if (!oldUsername.equals(rCr.getUsername()) && userDAO.existsusername(rCr.getUsername()))
                     return Response.status(406).build();
                 if (!oldUser.getMail().equals(rCr.getMail()) && userDAO.existsmail(rCr.getMail()))
@@ -204,11 +200,6 @@ public class UserServices {
                     User newUser = userDAO.updateUserParameters(oldUser, changedUser);
 
                     return Response.status(201).entity(newUser).build();
-                    /*userDAO.updateUserParameters(oldUsername, newUser);
-                    inventoryDAO.updateUsername(oldUsername, newUser);
-                    if (gameDAO.existsUsername(oldUsername))
-                        gameDAO.updateUsername(oldUsername, newUser);
-                    return Response.status(200).entity(newUser).build();*/
                 }
 
             }

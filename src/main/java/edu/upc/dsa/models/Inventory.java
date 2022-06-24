@@ -1,28 +1,24 @@
 package edu.upc.dsa.models;
 
 public class Inventory {
-    String username;
+    int idUser;
     String NameItem;
     int quantItem;
-    String descrItem;
-    String photoItem;
 
     public Inventory() {}
 
-    public Inventory(String username, String NameItem, int quantItem, String descrItem, String photoItem) {
-        this.username = username;
+    public Inventory(int idUser, String NameItem, int quantItem) {
+        this.idUser = idUser;
         this.NameItem = NameItem;
         this.quantItem = quantItem;
-        this.descrItem = descrItem;
-        this.photoItem = photoItem;
     }
 
-    public String getUsername() {
-        return username;
+    public int getIdUser() {
+        return idUser;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setIdUser(int idUser) {
+        this.idUser = idUser;
     }
 
     public String getNameItem() {
@@ -39,21 +35,5 @@ public class Inventory {
 
     public void setQuantItem(int quantItem) {
         this.quantItem = quantItem;
-    }
-
-    public String getDescrItem() {
-        return descrItem;
-    }
-
-    public void setDescrItem(String descrItem) {
-        this.descrItem = descrItem;
-    }
-
-    public String getPhotoItem() {
-        return photoItem;
-    }
-
-    public void setPhotoItem(String photoItem) {
-        this.photoItem = photoItem;
     }
 }

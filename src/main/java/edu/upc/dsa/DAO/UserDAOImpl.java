@@ -30,7 +30,7 @@ public class UserDAOImpl implements UserDAO {
         int usuarioID = 0;
 
         try {
-            User usuario = new User(name, username, password, email);
+            User usuario = new User(name, username, password, email, 0);
 
             session.save(usuario);
         } catch (Exception e) {
@@ -124,7 +124,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public boolean updateUserCoinsByUsername(int userCoins, String userName) {
-        return session.updateParameterByParameter(User.class, "coins", userCoins, "name", userName);
+        return session.updateParameterByParameter(User.class, "coins", userCoins, "username", userName);
     }
 
     @Override

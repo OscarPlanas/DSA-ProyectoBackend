@@ -18,6 +18,8 @@ public interface InventoryDAO {
     Inventory getByTwoParameters(String firstParameter, Object firstValue, String secondParameter, Object secondValue);
     Object getParameterByParameter(String parameter, String byParameter, Object value);
 
+    void addInventory(String username, String NameItem);
+
     boolean existsInventoryByUserNameAndItemName(String userName, String itemName);
 
     boolean update(Inventory inventory);

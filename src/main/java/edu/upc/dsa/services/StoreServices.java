@@ -1,6 +1,10 @@
 package edu.upc.dsa.services;
 
 
+import edu.upc.dsa.DAO.ItemDAO;
+import edu.upc.dsa.DAO.ItemDAOImpl;
+import edu.upc.dsa.DAO.UserDAO;
+import edu.upc.dsa.DAO.UserDAOImpl;
 import edu.upc.dsa.UserManager;
 import edu.upc.dsa.UserManagerImpl;
 import edu.upc.dsa.ItemManagerImpl;
@@ -21,17 +25,11 @@ import java.util.List;
 @Path("/store")
 public class StoreServices {
 
-    private ItemManager manager;
+    private ItemDAO manager;
+    private UserDAO userManager;
     public StoreServices() {
-        this.manager = ItemManagerImpl.getInstance();
-
-        this.manager.addItem(new Item("Manzana", "Regenera vida", 200));
-        this.manager.addItem(new Item("Espada", "Para atacar", 50));
-        this.manager.addItem(new Item("Llave", "Abre una puerta", 100));
-        this.manager.addItem(new Item("Palo", "No hace nada", 10));
-
-
-
+        this.manager = ItemDAOImpl.getInstance();
+        this.userManager = UserDAOImpl.getInstance();
     }
 
     //Get de la lista de items
@@ -48,8 +46,29 @@ public class StoreServices {
         return Response.status(201).entity(entity).build();
     }
 
+    //Get de un item
+    @PUT
+    @ApiOperation(value = "Get un item", notes = "Get un item")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful", response = Item.class, responseContainer = "Item"),
+    })
+    @Path("/buy")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getItem(Inventory i) {
+        Item item = this.manager.getItemByName(i.getNameItem());
+        User user = this.userManager.getUser(i.getUsername());
+        int coinstotales = user.getCoins() - (item.getCoins()*i.getQuantItem());
+        if(coinstotales < 0){
+            return Response.status(413).build();
+        }
+        else {
+            this.userManager.updateUserCoinsByUsername(coinstotales, i.getUsername());
+            return Response.status(201).build();
+        }
+    }
+
     //Get de la lista de items ordenados por precio
-    @GET
+    /*@GET
     @ApiOperation(value = "Get de todos los items por precio", notes = "Get todos los items por precio")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful", response = Item.class, responseContainer = "Lista"),
@@ -65,5 +84,5 @@ public class StoreServices {
             return Response.status(201).entity(entity).build();
         }
         return Response.status(404).entity(entity).build();
-    }
+    }*/
 }

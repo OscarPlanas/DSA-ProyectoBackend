@@ -13,7 +13,7 @@ public interface ItemDAO {
     List<Item> getAllItems();
     Item getItemByName(String name);
     Item getByParameter(String parameter, Object value);
-
+    //List<Item> getItemsPorPrecio();
     boolean existsItem(String name);
 
     boolean update(Item item);

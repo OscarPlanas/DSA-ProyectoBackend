@@ -2,6 +2,8 @@ package edu.upc.dsa.DAO;
 import edu.upc.dsa.models.Item;
 import edu.upc.dsa.models.User;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -60,6 +62,20 @@ public class ItemDAOImpl implements ItemDAO {
     public boolean updateByParameter(Item item, String parameter, Object value) {
         return session.updateByParameter(Item.class, parameter, value);
     }
+
+    //Get de los items por precio ascendente
+    /*@Override
+    public List<Item> getItemsPorPrecio(){
+        List<Item> orden = new LinkedList<>(this.itemList);
+        Collections.sort(orden, new Comparator<Item>() {
+            @Override
+            public int compare(Item o1, Item o2) {
+                return Integer.compare(o1.getCoins(), o2.getCoins());
+            }
+        });
+        logger.info("Listado de items ordenados por precio ascendente: " + orden.toString());
+        return orden;
+    }*/
 
     @Override
     public void delete(Item item) {

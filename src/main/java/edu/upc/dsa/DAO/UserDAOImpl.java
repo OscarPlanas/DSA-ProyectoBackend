@@ -2,6 +2,7 @@ package edu.upc.dsa.DAO;
 
 import edu.upc.dsa.UserManagerImpl;
 import edu.upc.dsa.models.User;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.LinkedList;
 public class UserDAOImpl implements UserDAO {
     private static UserDAO instance;
     private final Session session;
+    final static Logger logger = Logger.getLogger(SessionImpl.class);
 
     private UserDAOImpl() {
 
@@ -126,16 +128,29 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public boolean updateUserParameters(String oldUsername, User newUser) {
-        //User user = (User) this.session.getByParameter(User.class, oldUsername);
-       /* new User(rCr.getName(), rCr.getPassword(), rCr.getUsername(), rCr.getMail());
+    public User updateUserParameters(User oldUser, User changed) {
+        //''User user = (User) this.session.getByParameter(User.class, oldUser.getUsername(), newUser.getUsername());
 
-        newUser.setName(newUser.getName());
-        newUser.setPassword(newUser.getPassword());
-        newUser.setUsername(newUser.getUsername());
-        newUser.setMail(newUser.getMail());*/
+        /*oUser.setName(oldUser.getName());
+        oldUser.setPassword(oldUser.getPassword());
+        oldUser.setUsername(oldUser.getUsername());
+        oldUser.setMail(oldUser.getMail());*/
 
-        return true;
+        session.updateParameterByParameter(User.class, "name", changed.getName(), "name", oldUser.getName());
+        session.updateParameterByParameter(User.class, "password", changed.getPassword(), "password", oldUser.getPassword());
+        session.updateParameterByParameter(User.class, "username", changed.getUsername(), "username", oldUser.getUsername());
+        session.updateParameterByParameter(User.class, "mail", changed.getMail(), "mail", oldUser.getMail());
+        logger.info("Old Name: " + oldUser.getName());
+        logger.info("New Name: " + changed.getName());
+
+        return changed;
+
+        /*if (session.updateParameterByParameter(User.class, "name", newUser.getName(), "name", oldName) &&
+                session.updateParameterByParameter(User.class, "password", newUser.getPassword(), "name", newUser.getName()) &&
+                session.updateParameterByParameter(User.class, "mail", newUser.getMail(), "name", newUser.getName()))
+            return true;
+        else
+            return false;*/
     }
 
     @Override

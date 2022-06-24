@@ -22,7 +22,7 @@ public interface UserDAO {
     boolean updateUser(User user);
     boolean updateByParameter(User user, String parameter, Object value);
     boolean updateUserCoinsByUsername(int userCoins, String username);
-    boolean updateUserParameters(String oldName, User newUser);
+    User updateUserParameters(User oldUser, User changed);
     boolean updateParameterByParameter(String parameter, Object parameterValue, String byParameter, Object byParameterValue);
 
     public boolean existsusername(String username);

@@ -160,7 +160,7 @@ public class UserServices {
         if(userDAO.existsusername(username)){
             userDAO.deleteUserByUsername(username);
             inventoryDAO.deleteInventoryByUsername(username);
-            return Response.status(200).entity(user).build();
+            return Response.status(201).entity(user).build();
         }
         return Response.status(404).build();
     }
@@ -179,6 +179,7 @@ public class UserServices {
     public Response updateUser(@PathParam("username") String oldUsername, RegisterCredentials rCr) {
 
         User oldUser = userDAO.getUser(oldUsername);
+        User changedUser = new User(rCr.getName(), rCr.getUsername(), rCr.getPassword(), rCr.getMail());
 
         if (!userDAO.existsusername(oldUsername)) {
             return Response.status(404).build();
@@ -200,8 +201,9 @@ public class UserServices {
                 if (!oldUser.getMail().equals(rCr.getMail()) && userDAO.existsmail(rCr.getMail()))
                     return Response.status(409).build();
                 else {
+                    User newUser = userDAO.updateUserParameters(oldUser, changedUser);
 
-                   return null;
+                    return Response.status(201).entity(newUser).build();
                     /*userDAO.updateUserParameters(oldUsername, newUser);
                     inventoryDAO.updateUsername(oldUsername, newUser);
                     if (gameDAO.existsUsername(oldUsername))

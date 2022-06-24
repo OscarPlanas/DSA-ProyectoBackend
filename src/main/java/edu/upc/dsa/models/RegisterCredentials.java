@@ -8,7 +8,7 @@ public class RegisterCredentials {
 
     public RegisterCredentials(){}
 
-    public RegisterCredentials(String name, String password, String username, String mail) {
+    public RegisterCredentials(String name, String username, String password, String mail) {
         this.name = name;
         this.password = password;
         this.username = username;

@@ -225,30 +225,35 @@ public class UserServices {
 
 
 
-    //Get del inventario de un usuario
+    //Get de la cantidad de un objeto de un usuario
     @GET
-    @ApiOperation(value = "Get del inventario de un user", notes = "Get del inventario de un user")
+    @ApiOperation(value = "Get de la cantidad de un objeto de un usuario", notes = "Get de la cantidad de un objeto de un usuario")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful", response = Inventory.class, responseContainer = "Lista"),
             @ApiResponse(code = 404, message = "User not found")
     })
-    @Path("/userInventoryList/{username}")
+    @Path("/userInventoryList/{username}/{NameItem}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserInventoryList(@PathParam("username") String username) {
+    public Response getUserInventoryList(@PathParam("username") String username, @PathParam("NameItem") String NameItem) {
 
         if (userDAO.existsusername(username)) {
-            List<Inventory> inventoryList = null;
+            Inventory i = null;
+            //List<Inventory> inventoryList = null;
             try {
-                inventoryList = inventoryDAO.getInventoryListByUserName(username);
+                i = inventoryDAO.getByParameter("NameItem", NameItem);
+
+              //inventoryList = inventoryDAO.getInventoryListByUserName(username);
+
             } catch (Throwable t) {
                 t.printStackTrace();
             }
-            GenericEntity<List<Inventory>> entity = new GenericEntity<List<Inventory>>(inventoryList) {
-            };
-            return Response.status(200).entity(entity).build();
+            i.getQuantItem();
+            //GenericEntity<List<Inventory>> entity = new GenericEntity<List<Inventory>>(inventoryList) {
+            return Response.status(201).entity(i).build();
         } else {
             return Response.status(404).build();
         }
+
     }
 
 

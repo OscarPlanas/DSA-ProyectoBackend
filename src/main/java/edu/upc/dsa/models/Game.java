@@ -6,16 +6,18 @@ import java.util.List;
 
 public class Game {
     private String username;
-    private int points;
+    private int coins;
     private int energy;
+    private int levels;
 
     public Game(){
     }
 
-    public Game(String username, int points, int energy){
+    public Game(String username, int points, int energy, int levels){
         this.username=username;
-        this.points=points;
+        this.coins=coins;
         this.energy=energy;
+        this.levels=levels;
     }
 
     public String getUsername() {
@@ -26,12 +28,20 @@ public class Game {
         this.username = username;
     }
 
-    public int getPoints() {
-        return points;
+    public int getCoins() {
+        return coins;
     }
 
-    public void setPoints(int points) {
-        this.points = points;
+    public void setCoins(int coins) {
+        this.coins = coins;
+    }
+
+    public int getLevels() {
+        return levels;
+    }
+
+    public void setLevels(int levels) {
+        this.levels = levels;
     }
 
     public int getEnergy() {

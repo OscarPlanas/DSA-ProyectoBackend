@@ -48,6 +48,17 @@
 					success: function (response) {
 						user_coins = response.coins;
 						document.getElementById("money").textContent = user_coins + " OC";
+						var data1 = {"username": user_name,
+						"NameItem": document.getElementById("Nombre_Objeto_" + index).textContent}
+						$.ajax({
+							type:'GET',
+							url:'/dsaApp/user/userInventoryList/' + user_name + '/' + document.getElementById("Nombre_Objeto_" + index).textContent,
+							dataType: 'json',
+							data: JSON.stringify(data1),
+							success: function (response1) {
+								document.getElementById("quantItem_" + document.getElementById("Nombre_Objeto_" + index).textContent).textContent = "Tienes " + response1.quantItem;
+							}
+						});
 					}
 				});
 				},1);
@@ -127,7 +138,19 @@
 				var cant = document.getElementById("cantidad");
 				const element = document.getElementById("items_cards");
 				const element1 = document.getElementById("item_card");
-				$("#items_cards").append('<div id="item_card_' + index +'" align="center" class="shop-box" style="margin: 5px; width: 30%"><img style="float:center; width:90%; height: 40%; margin-top: 30px" src="' + item.image + '"/><div  style="margin-top: 10px; margin-bottom: 15px"><span><strong id="Nombre_Objeto_' + index +'" style="font-size: 30px">' + item.name +'</strong></span></div><div><span><strong id="item_precio' + index + '" style="font-size: 30px">'+ item.coins +' OC</strong></span></div><div style="display:flex; justify-content:center; margin-top: 15px"><div style="display: flex; align-items: center;"><img onclick="myFunction1(' + index + ')" id="menos_img_' + index + '" style="cursor:pointer; width:20px; height: 20px" src="img/menos.png"/></div><span id="Cantidad_' + index + '" style="display: flex; align-items: center; font-size:40px; padding-bottom: 4px" class="masmenos">0</span><div style="display: flex; align-items: center;"><img onclick="myFunction(' + index + ')" style="cursor:pointer; width:20px; height: 20px" src="img/mas.png"/></div></div><span id="quantItem">Tienes 5</span><br><button onclick="comprar(' + index + ')" style="border:none; font-size:20px; padding: 0 10px 5px 10px; border-radius: 4px; background-color: #4E9BC4; color: #FFFFFF; margin-top: 10px">Comprar</button></div>');
+				$("#items_cards").append('<div id="item_card_' + index +'" align="center" class="shop-box" style="margin: 5px; width: 30%"><img style="float:center; width:90%; height: 40%; margin-top: 30px" src="' + item.image + '"/><div  style="margin-top: 10px; margin-bottom: 15px"><span><strong id="Nombre_Objeto_' + index +'" style="font-size: 30px">' + item.name +'</strong></span></div><div><span><strong id="item_precio' + index + '" style="font-size: 30px">'+ item.coins +' OC</strong></span></div><div style="display:flex; justify-content:center; margin-top: 15px"><div style="display: flex; align-items: center;"><img onclick="myFunction1(' + index + ')" id="menos_img_' + index + '" style="cursor:pointer; width:20px; height: 20px" src="img/menos.png"/></div><span id="Cantidad_' + index + '" style="display: flex; align-items: center; font-size:40px; padding-bottom: 4px" class="masmenos">0</span><div style="display: flex; align-items: center;"><img onclick="myFunction(' + index + ')" style="cursor:pointer; width:20px; height: 20px" src="img/mas.png"/></div></div><span id="quantItem_' + item.name + '"></span><br><button onclick="comprar(' + index + ')" style="border:none; font-size:20px; padding: 0 10px 5px 10px; border-radius: 4px; background-color: #4E9BC4; color: #FFFFFF; margin-top: 10px">Comprar</button></div>');
+				var data = {"username": user_name,
+						"NameItem": item.name}
+				$.ajax({
+					type:'GET',
+					url:'/dsaApp/user/userInventoryList/' + user_name + '/' + item.name,
+					dataType: 'json',
+					data: JSON.stringify(data),
+					success: function (response) {
+						document.getElementById("quantItem_" + item.name).textContent = "Tienes " + response.quantItem;
+					}
+				});
+
 			}
 	</script>
 	</head>

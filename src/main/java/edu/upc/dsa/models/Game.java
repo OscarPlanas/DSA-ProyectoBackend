@@ -7,15 +7,15 @@ import java.util.List;
 public class Game {
     private String username;
     private int points;
-    private int health;
+    private int energy;
 
     public Game(){
     }
 
-    public Game(String username, int points, int health){
+    public Game(String username, int points, int energy){
         this.username=username;
         this.points=points;
-        this.health=health;
+        this.energy=energy;
     }
 
     public String getUsername() {
@@ -34,11 +34,11 @@ public class Game {
         this.points = points;
     }
 
-    public int getHealth() {
-        return health;
+    public int getEnergy() {
+        return energy;
     }
 
-    public void setHealth(int health) {
-        this.health = health;
+    public void setEnergy(int energy) {
+        this.energy = energy;
     }
 }

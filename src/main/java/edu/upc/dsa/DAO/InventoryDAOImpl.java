@@ -65,8 +65,8 @@ public class InventoryDAOImpl implements InventoryDAO {
 
     @Override
     public void addInventory(String username, String NameItem) {
-        Object o = session.getParameterByParameter(User.class, "id", "username", username);
-        Inventory in = new Inventory(, NameItem, 0);
+        //Object o = session.getParameterByParameter(User.class, "id", "username", username);
+        Inventory in = new Inventory(username, NameItem, 0);
         session.create(in);
     }
 
@@ -110,7 +110,7 @@ public class InventoryDAOImpl implements InventoryDAO {
 
     @Override
     public boolean updateItemQuantityByUserNameAndItemName(int itemQuantity, String userName, String itemName) {
-        return session.updateParameterByTwoParameters(Inventory.class, "itemQuantity", itemQuantity, "userName", userName, "itemName", itemName);
+        return session.updateParameterByTwoParameters(Inventory.class, "quantItem", itemQuantity, "username", userName, "NameItem", itemName);
     }
 
     @Override

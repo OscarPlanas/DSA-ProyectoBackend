@@ -98,7 +98,7 @@ public class QueryHelper {
         StringBuffer sb = new StringBuffer("SELECT * FROM ");
         sb.append(theClass.getSimpleName());
         sb.append(" WHERE " + byParameter + " = ?");
-
+        //logger.info("++++++"+ sb.toString());
         return sb.toString();
     }
     public static String createQuerySELECTbyTwoParameters(Class theClass, String byFirstParameter, String bySecondParameter) {

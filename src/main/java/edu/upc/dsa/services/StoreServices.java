@@ -1,10 +1,7 @@
 package edu.upc.dsa.services;
 
 
-import edu.upc.dsa.DAO.ItemDAO;
-import edu.upc.dsa.DAO.ItemDAOImpl;
-import edu.upc.dsa.DAO.UserDAO;
-import edu.upc.dsa.DAO.UserDAOImpl;
+import edu.upc.dsa.DAO.*;
 import edu.upc.dsa.UserManager;
 import edu.upc.dsa.UserManagerImpl;
 import edu.upc.dsa.ItemManagerImpl;
@@ -14,6 +11,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.apache.log4j.Logger;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.GenericEntity;
@@ -25,11 +23,16 @@ import java.util.List;
 @Path("/store")
 public class StoreServices {
 
+    final static Logger logger = Logger.getLogger(SessionImpl.class);
+
     private ItemDAO manager;
     private UserDAO userManager;
+    private InventoryDAO inventoryManager;
     public StoreServices() {
         this.manager = ItemDAOImpl.getInstance();
         this.userManager = UserDAOImpl.getInstance();
+        this.inventoryManager = InventoryDAOImpl.getInstance();
+
     }
 
     //Get de la lista de items
@@ -62,9 +65,35 @@ public class StoreServices {
             return Response.status(413).build();
         }
         else {
+            Inventory inven = this.inventoryManager.getByTwoParameters("username", i.getUsername(), "NameItem", item.getName());
+            inven.setQuantItem(inven.getQuantItem() + i.getQuantItem());
+            logger.info(inven.getUsername() + " " + inven.getNameItem() + " " + inven.getQuantItem());
+            this.inventoryManager.updateItemQuantityByUserNameAndItemName(inven.getQuantItem(), i.getUsername(), i.getNameItem());
             this.userManager.updateUserCoinsByUsername(coinstotales, i.getUsername());
             return Response.status(201).build();
         }
+    }
+
+    @PUT
+    @ApiOperation(value = "Use an item", notes = "Use an item")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful", response = Item.class, responseContainer = "Item"),
+            @ApiResponse(code = 406, message = "Don't have any quantity"),
+    })
+    @Path("/use/{username}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response useItem(@PathParam("username") String username, String nameitem) {
+
+        Inventory in = this.inventoryManager.getByTwoParameters("username", username, "NameItem", nameitem);
+        if(in.getQuantItem()>0){
+            in.setQuantItem(in.getQuantItem() - 1);
+            this.inventoryManager.updateItemQuantityByUserNameAndItemName(in.getQuantItem(), username, nameitem);
+            return Response.status(201).build();
+        }
+        else{
+            return Response.status(406).build();
+        }
+
     }
 
     //Get de la lista de items ordenados por precio

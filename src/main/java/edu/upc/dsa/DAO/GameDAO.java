@@ -22,7 +22,7 @@ public interface GameDAO {
     boolean updateByParameter(Game game, String parameter, Object value);
     boolean updateUsername(String oldName, User newUser);
     boolean updatePointsByUsername(int points, String username);
-    boolean updateHealthByUsername(int health, String username);
+    boolean updateEnergyByUsername(int energy, String username);
     boolean updateParameterByParameter(String parameter, Object parameterValue, String byParameter, Object byParameterValue);
 
     void delete(Game game);

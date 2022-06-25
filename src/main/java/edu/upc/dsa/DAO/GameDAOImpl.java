@@ -81,8 +81,8 @@ public class GameDAOImpl implements GameDAO{
     }
 
     @Override
-    public boolean updateHealthByUsername(int health, String userName) {
-        return session.updateParameterByParameter(Game.class, "health", health, "userName", userName);
+    public boolean updateEnergyByUsername(int energy, String userName) {
+        return session.updateParameterByParameter(Game.class, "energy", energy, "userName", userName);
     }
 
     @Override

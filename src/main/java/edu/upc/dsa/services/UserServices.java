@@ -114,6 +114,19 @@ public class UserServices {
        return Response.status(201).entity(entity).build();
     }
 
+    //Get Coins
+    @GET
+    @ApiOperation(value = "Get coins", notes = "Get Coins")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful", response = User.class, responseContainer = "Lista"),
+    })
+    @Path("/{username}/coins")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getcoins(@PathParam("username") String username) {
+        Object oc = this.userDAO.getParameterByParameter("coins", "username", username);
+        return Response.status(201).entity(oc).build();
+    }
+
     //Get de un usuario
     @GET
     @ApiOperation(value = "Get de un usuario", notes = "Get un usuario")
@@ -197,12 +210,44 @@ public class UserServices {
                 if (!oldUser.getMail().equals(rCr.getMail()) && userDAO.existsmail(rCr.getMail()))
                     return Response.status(409).build();
                 else {
+                    this.inventoryDAO.updateParameterByParameter("username", rCr.getUsername(), "username", oldUsername);
                     User newUser = userDAO.updateUserParameters(oldUser, changedUser);
 
                     return Response.status(201).entity(newUser).build();
                 }
 
             }
+        }
+
+
+
+    }
+
+
+
+    //Get del inventario de un usuario
+    @GET
+    @ApiOperation(value = "Get del inventario de un user", notes = "Get del inventario de un user")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful", response = Inventory.class, responseContainer = "Lista"),
+            @ApiResponse(code = 404, message = "User not found")
+    })
+    @Path("/userInventoryList/{username}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUserInventoryList(@PathParam("username") String username) {
+
+        if (userDAO.existsusername(username)) {
+            List<Inventory> inventoryList = null;
+            try {
+                inventoryList = inventoryDAO.getInventoryListByUserName(username);
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+            GenericEntity<List<Inventory>> entity = new GenericEntity<List<Inventory>>(inventoryList) {
+            };
+            return Response.status(200).entity(entity).build();
+        } else {
+            return Response.status(404).build();
         }
     }
 

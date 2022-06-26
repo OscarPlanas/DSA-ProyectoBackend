@@ -32,7 +32,13 @@ public class GameDAOImpl implements GameDAO{
     }
     @Override
     public boolean addGame(Game game) {
-        return session.create(game);
+        try {
+            return session.create(game);
+
+        } catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override

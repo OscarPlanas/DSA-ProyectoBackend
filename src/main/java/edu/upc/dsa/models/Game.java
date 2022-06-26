@@ -7,18 +7,15 @@ import java.util.List;
 public class Game {
     private String username;
     private int coins;
-    private int energy;
-    private int levels;
-    //private int
+    private int points;
 
     public Game(){
     }
 
-    public Game(String username, int points, int energy, int levels){
+    public Game(String username, int coins, int points){
         this.username=username;
         this.coins=coins;
-        this.energy=energy;
-        this.levels=levels;
+        this.points=points;
     }
 
     public String getUsername() {
@@ -37,19 +34,11 @@ public class Game {
         this.coins = coins;
     }
 
-    public int getLevels() {
-        return levels;
+    public int getPoints() {
+        return points;
     }
 
-    public void setLevels(int levels) {
-        this.levels = levels;
-    }
-
-    public int getEnergy() {
-        return energy;
-    }
-
-    public void setEnergy(int energy) {
-        this.energy = energy;
+    public void setPoints(int points) {
+        this.points = points;
     }
 }

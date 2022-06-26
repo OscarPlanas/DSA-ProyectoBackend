@@ -18,10 +18,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @Api(value = "/game", description = "Endpoint to Game Service")
 @Path("/game")
@@ -77,11 +74,30 @@ public class GameServices {
         return Response.status(404).entity(entity).build();
     }
     //Get de partidas de un usuario
+    @GET
+    @ApiOperation(value = "Get games of a user", notes = "Get games of a user")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful", response = Game.class, responseContainer = "Lista"),
+            @ApiResponse(code = 404, message = "Lista no encontrada")
+    })
+    @Path("/{username}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getRankingUser(@PathParam("username") String username) {
 
+        List<Game> list = this.gameDAO.getAllGamesByUsername(username);
+        
+        Collections.sort(list, new Comparator<Game>() {
+            @Override
+            public int compare(Game g1, Game g2) {
+                return Integer.compare(g1.getCoins(), g2.getCoins());
+            }
+        });
 
+        GenericEntity<List<Game>> entity = new GenericEntity<List<Game>>(list){};
 
-
-
-
-
+        if(list.size() > 0){
+            return Response.status(201).entity(entity).build();
+        }
+        return Response.status(404).entity(entity).build();
+    }
 }

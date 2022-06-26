@@ -230,6 +230,8 @@ public class UserServices {
                     return Response.status(409).build();
                 else {
                     this.inventoryDAO.updateParameterByParameter("username", rCr.getUsername(), "username", oldUsername);
+                    this.gameDAO.updateParameterByParameter("username", rCr.getUsername(), "username", oldUsername);
+
                     User newUser = userDAO.updateUserParameters(oldUser, changedUser);
 
                     return Response.status(201).entity(newUser).build();

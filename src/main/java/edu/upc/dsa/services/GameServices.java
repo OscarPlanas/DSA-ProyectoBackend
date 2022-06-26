@@ -92,6 +92,7 @@ public class GameServices {
                 return Integer.compare(g1.getCoins(), g2.getCoins());
             }
         });
+        Collections.reverse(list);
 
         GenericEntity<List<Game>> entity = new GenericEntity<List<Game>>(list){};
 

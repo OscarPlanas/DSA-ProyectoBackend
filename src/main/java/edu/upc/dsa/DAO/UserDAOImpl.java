@@ -248,6 +248,21 @@ public class UserDAOImpl implements UserDAO {
 
         }*/
 
+    @Override
+    public String getPassHash(String parameter) {
+        try {
+            logger.info("oooooooooo");
+            return session.getHash(parameter);
+        } catch (Exception e) {
+            logger.info("eeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+            e.printStackTrace();
+            return null;
+        } finally {
+            //session.close();
+
+        }
+
+    }
 
 }
 

@@ -35,7 +35,7 @@ public interface Session<E> {
 
     /*HashMap<Integer, Object> FindAll(Class theClass);
     HashMap<Integer, Object> FindAllByParameter(Class theClass, String byParameter, Object byParameterValue);*/
-
+    String getHash(String parameter);
     int size();
 
 }

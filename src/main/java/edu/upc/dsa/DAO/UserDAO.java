@@ -28,4 +28,6 @@ public interface UserDAO {
     public boolean existsusername(String username);
     public boolean existsmail(String email);
 
+    String getPassHash(String parameter);
+
 }

@@ -648,6 +648,9 @@ public class SessionImpl implements Session {
             return null;
         }
     }*/
+
+
+
     @Override
     public int size() {
         String sizeQuery = QueryHelper.createQuerySIZEuser();
@@ -660,5 +663,31 @@ public class SessionImpl implements Session {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    public String getHash(String parameter){
+        String selectQuery = QueryHelper.createQueryHash(parameter);
+        logger.info(selectQuery);
+
+        PreparedStatement pstm = null;
+        ResultSet rs = null;
+        ResultSetMetaData rsmd = null;
+
+        try {
+            Object object = null; //theClass.getDeclaredConstructor().newInstance();
+
+            pstm = conn.prepareStatement(selectQuery);
+            logger.info("conn okay");
+            pstm.executeQuery();
+            rs = pstm.getResultSet();
+            rs.next();
+            logger.info((String)rs.getString(1));
+            return (String)rs.getString(1);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            logger.info("iiiiiiiiiiiiiiiiiiiiiii");
+            return null;
+        }
     }
 }

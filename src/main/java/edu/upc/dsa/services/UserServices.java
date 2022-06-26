@@ -74,13 +74,14 @@ public class UserServices {
 
         logger.info(userDAO.existsusername(credLogin.getUsername())+" kjanakjgnkajsgnkangan");
         logger.info(userDAO.getPasswordByUsername(credLogin.getUsername(), credLogin.getPassword())+ " credpass");
-
+        String hasheada = userDAO.getPassHash(credLogin.getPassword());
         if (credLogin.getUsername().isEmpty() || credLogin.getPassword().isEmpty()){
             return Response.status(501).build();
         }
 
         if (userDAO.existsusername(credLogin.getUsername())) {
-            if(userDAO.getPasswordByUsername(credLogin.getUsername(), credLogin.getPassword())) {
+            //if(userDAO.getPasswordByUsername(credLogin.getUsername(), credLogin.getPassword())) {
+            if(userDAO.getPasswordByUsername(credLogin.getUsername(), hasheada)) {
                 return Response.status(201).entity(u).build();
             }
             else {
@@ -114,7 +115,9 @@ public class UserServices {
             }
             //u.setMail(u.getMail());
             //u.setName(u.getName());
-            this.userDAO.addUser(u.getName(), u.getUsername(), u.getPassword(), u.getMail());
+            String hasheada = userDAO.getPassHash(u.getPassword());
+
+            this.userDAO.addUser(u.getName(), u.getUsername(), hasheada, u.getMail());
             return Response.status(201).entity(u).build();
         }
     }

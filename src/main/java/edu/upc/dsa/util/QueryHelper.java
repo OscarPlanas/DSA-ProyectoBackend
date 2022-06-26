@@ -190,4 +190,10 @@ public class QueryHelper {
 
         return sb.toString();
     }
+    public static String createQueryHash(String value) {
+        StringBuffer sb = new StringBuffer("SELECT MD5('");
+        sb.append(value).append("')");
+        return sb.toString();
+    }
+
 }

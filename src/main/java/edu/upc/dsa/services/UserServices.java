@@ -41,22 +41,11 @@ public class UserServices {
         this.inventoryDAO = InventoryDAOImpl.getInstance();
         this.itemDAO = ItemDAOImpl.getInstance();
         this.gameDAO = GameDAOImpl.getInstance();
-
-        /*if (userDAO.userListSize() == 0) {
-            this.userDAO.addUser("Esther", "EstheMC", "12345", "esther@gmail.com");
-            this.userDAO.addUser("Oscar", "Oscar", "123", "oscar@gmail.com");
-
-            Item i1 = new Item("Espada", "Para atacar", 50);
-            Item i2 = new Item("Llave", "Abre una puerta", 100);
-
-            //u1.addItem(i1);
-            //u2.addItem(i2);
-        }*/
     }
 
     //Login de usuario
     @POST
-    @ApiOperation(value = "Login usuario", notes = "Password")
+    @ApiOperation(value = "Login usuario", notes = "Username and password")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful", response = User.class),
             @ApiResponse(code = 404, message = "User not found"),
@@ -94,7 +83,7 @@ public class UserServices {
 
     //Registro de usuario
     @POST
-    @ApiOperation(value = "Registrar nuevo usuario", notes = "Nombre y password")
+    @ApiOperation(value = "Registrar nuevo usuario", notes = "Name, username, password and mail")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful", response = User.class),
             @ApiResponse(code = 500, message = "Validation Error"),
@@ -113,8 +102,7 @@ public class UserServices {
             {
                     inventoryDAO.addInventory(u.getUsername(), it.getName());
             }
-            //u.setMail(u.getMail());
-            //u.setName(u.getName());
+
             String hasheada = userDAO.getPassHash(u.getPassword());
 
             this.userDAO.addUser(u.getName(), u.getUsername(), hasheada, u.getMail());
@@ -124,7 +112,7 @@ public class UserServices {
 
     //Get de la lista de usuarios
     @GET
-    @ApiOperation(value = "Get de todos los usuarios", notes = "Get todos los usuarios")
+    @ApiOperation(value = "Get de todos los usuarios", notes = "Nothing")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful", response = User.class, responseContainer = "Lista"),
     })
@@ -138,7 +126,7 @@ public class UserServices {
 
     //Get Coins
     @GET
-    @ApiOperation(value = "Get coins", notes = "Get Coins")
+    @ApiOperation(value = "Get coins", notes = "Username")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful", response = User.class, responseContainer = "Lista"),
     })
@@ -151,7 +139,7 @@ public class UserServices {
 
     //Get de un usuario
     @GET
-    @ApiOperation(value = "Get de un usuario", notes = "Get un usuario")
+    @ApiOperation(value = "Get de un usuario", notes = "Username")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful", response = User.class, responseContainer = "Lista"),
     })
@@ -163,32 +151,9 @@ public class UserServices {
         return Response.status(201).entity(entity).build();
     }
 
-    //Get lista de items de un usuario
-    //Falta acabar de implementarla
-    /*@GET
-
-    @ApiOperation(value = "Get Item list", notes = "Get Item por username")
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Successful", response = User.class, responseContainer = "Lista"),
-            @ApiResponse(code = 404, message = "Username no encontrado"),
-
-    })
-    @Path("/item/{username}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getItemListUser(@PathParam("username") String username) {
-        User user = this.manager.getUser(username);
-        if (user == null){
-            return Response.status(404).build();
-        }
-        else{
-            List<Item> itemList = user.getItemList();
-            GenericEntity<List<Item>> entity = new GenericEntity<List<Item>>(itemList){};
-            return Response.status(201).entity(entity).build();
-        }
-    }*/
     //Eliminar un usuario
     @DELETE
-    @ApiOperation(value = "Delete a user", notes = "Eliminar usuario por username")
+    @ApiOperation(value = "Delete a user", notes = "Username")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful"),
             @ApiResponse(code = 404, message = "User not found")
@@ -207,7 +172,7 @@ public class UserServices {
 
     //Updateamos un usuario
     @PUT
-    @ApiOperation(value = "Update a user", notes = "Updatear un usuario")
+    @ApiOperation(value = "Update a user", notes = "Username")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful", response = User.class),
             @ApiResponse(code = 404, message = "Usuario no encontrado"),
@@ -244,11 +209,9 @@ public class UserServices {
         }
     }
 
-
-
     //Get de la cantidad de un objeto de un usuario
     @GET
-    @ApiOperation(value = "Get de la cantidad de un objeto de un usuario", notes = "Get de la cantidad de un objeto de un usuario")
+    @ApiOperation(value = "Get de la cantidad de un objeto de un usuario", notes = "Username and NameItem")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful", response = Inventory.class, responseContainer = "Lista"),
             @ApiResponse(code = 404, message = "User not found")
@@ -259,24 +222,16 @@ public class UserServices {
 
         if (userDAO.existsusername(username)) {
             Inventory i = null;
-            //List<Inventory> inventoryList = null;
             try {
                 i = inventoryDAO.getByParameter("NameItem", NameItem);
-
-              //inventoryList = inventoryDAO.getInventoryListByUserName(username);
 
             } catch (Throwable t) {
                 t.printStackTrace();
             }
             i.getQuantItem();
-            //GenericEntity<List<Inventory>> entity = new GenericEntity<List<Inventory>>(inventoryList) {
             return Response.status(201).entity(i).build();
         } else {
             return Response.status(404).build();
         }
-
     }
-
-
-
 }

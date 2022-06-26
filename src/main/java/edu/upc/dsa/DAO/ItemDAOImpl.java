@@ -63,20 +63,6 @@ public class ItemDAOImpl implements ItemDAO {
         return session.updateByParameter(Item.class, parameter, value);
     }
 
-    //Get de los items por precio ascendente
-    /*@Override
-    public List<Item> getItemsPorPrecio(){
-        List<Item> orden = new LinkedList<>(this.itemList);
-        Collections.sort(orden, new Comparator<Item>() {
-            @Override
-            public int compare(Item o1, Item o2) {
-                return Integer.compare(o1.getCoins(), o2.getCoins());
-            }
-        });
-        logger.info("Listado de items ordenados por precio ascendente: " + orden.toString());
-        return orden;
-    }*/
-
     @Override
     public void delete(Item item) {
 

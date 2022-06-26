@@ -33,7 +33,7 @@ public class GameServices {
 
     //Añadimos partida
     @POST
-    @ApiOperation(value = "New game", notes = "New game")
+    @ApiOperation(value = "New game", notes = "Username, coins and points")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful", response = Game.class),
             @ApiResponse(code = 411, message = "User does not exist")
@@ -55,7 +55,7 @@ public class GameServices {
 
     //Get all para todos los jugadores ordenados(ranking)
     @GET
-    @ApiOperation(value = "Get ranking", notes = "Get ranking")
+    @ApiOperation(value = "Get ranking", notes = "Nothing")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful", response = Game.class, responseContainer = "Lista"),
             @ApiResponse(code = 404, message = "Lista no encontrada")
@@ -63,7 +63,6 @@ public class GameServices {
     @Path("/rankingAll")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getRankingAll() {
-        //List<Game> list = this.gameDAO.getAllGames();
         List<Game> list = this.gameDAO.orderGamesByPoints();
 
         GenericEntity<List<Game>> entity = new GenericEntity<List<Game>>(list){};
@@ -75,7 +74,7 @@ public class GameServices {
     }
     //Get de partidas de un usuario
     @GET
-    @ApiOperation(value = "Get games of a user", notes = "Get games of a user")
+    @ApiOperation(value = "Get games of a user", notes = "Username")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful", response = Game.class, responseContainer = "Lista"),
             @ApiResponse(code = 404, message = "Lista no encontrada")

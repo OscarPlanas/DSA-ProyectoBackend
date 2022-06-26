@@ -37,7 +37,7 @@ public class StoreServices {
 
     //Get de la lista de items
     @GET
-    @ApiOperation(value = "Get de todos los items", notes = "Get todos los items")
+    @ApiOperation(value = "Get de todos los items", notes = "Nothing")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful", response = Item.class, responseContainer = "Lista"),
     })
@@ -51,7 +51,7 @@ public class StoreServices {
 
     //Get de un item
     @PUT
-    @ApiOperation(value = "Get un item", notes = "Get un item")
+    @ApiOperation(value = "Get un item", notes = "Nothing")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful", response = Item.class, responseContainer = "Item"),
     })
@@ -75,7 +75,7 @@ public class StoreServices {
     }
 
     @PUT
-    @ApiOperation(value = "Use an item", notes = "Use an item")
+    @ApiOperation(value = "Use an item", notes = "Username")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful", response = Item.class, responseContainer = "Item"),
             @ApiResponse(code = 406, message = "Don't have any quantity"),
@@ -93,25 +93,6 @@ public class StoreServices {
         else{
             return Response.status(406).build();
         }
-
     }
 
-    //Get de la lista de items ordenados por precio
-    /*@GET
-    @ApiOperation(value = "Get de todos los items por precio", notes = "Get todos los items por precio")
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Successful", response = Item.class, responseContainer = "Lista"),
-            @ApiResponse(code = 404, message = "Lista no encontrada")
-    })
-    @Path("/getOrdenado")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getItemsPorPrecio() {
-        List<Item> listaitemsprecio = this.manager.getItemsPorPrecio();
-        GenericEntity<List<Item>> entity = new GenericEntity<List<Item>>(listaitemsprecio){};
-
-        if(listaitemsprecio.size() > 0){
-            return Response.status(201).entity(entity).build();
-        }
-        return Response.status(404).entity(entity).build();
-    }*/
 }

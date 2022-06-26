@@ -26,25 +26,6 @@ public class QueryHelper {
         return sb.toString();
     }
 
-    /*StringBuffer sb = new StringBuffer("INSERT INTO ");
-        sb.append("users").append(" ");
-        //sb.append(entity.getClass().getSimpleName()).append(" ");
-        sb.append("(");
-
-        String [] fields = ObjectHelper.getFields(entity);
-
-        sb.append("id, name, password, username, mail");
-
-        sb.append(") VALUES (");
-
-        for (String field: fields) {
-            sb.append(", ?");
-        }
-
-        sb.append(")");
-
-        return sb.toString();*/
-
     public static String createQuerySELECT(Object entity) {
         StringBuffer sb = new StringBuffer("SELECT * FROM ");
         sb.append(entity.getClass().getSimpleName());

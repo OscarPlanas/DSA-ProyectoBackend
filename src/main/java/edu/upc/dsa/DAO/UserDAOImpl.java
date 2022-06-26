@@ -25,6 +25,7 @@ public class UserDAOImpl implements UserDAO {
         return instance;
     }
 
+    //Añadimos usuario
     @Override
     public int addUser(String name, String username, String password, String email) {
         int usuarioID = 0;
@@ -42,6 +43,7 @@ public class UserDAOImpl implements UserDAO {
         return usuarioID;
     }
 
+    //Get de todos os usuarios
     @Override
     public List<User> getAllUsers() {
         try {
@@ -54,6 +56,7 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    //Get de un usuario
     @Override
     public User getUser(String username) {
         try {
@@ -67,6 +70,7 @@ public class UserDAOImpl implements UserDAO {
 
     }
 
+    //Tamaño lista de usuario
     @Override
     public int userListSize() {
         try {
@@ -77,6 +81,7 @@ public class UserDAOImpl implements UserDAO {
         return 0;
     }
 
+    //Delete de un usuario
     @Override
     public void deleteUser(User user) {
         try {
@@ -88,6 +93,7 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    //Delete en base del username
     @Override
     public boolean deleteUserByUsername(String username) {
         try {
@@ -100,6 +106,7 @@ public class UserDAOImpl implements UserDAO {
         return false;
     }
 
+    //Delete por parametro
     @Override
     public boolean deleteByParameter(String parameter, Object value) {
         try {
@@ -112,6 +119,7 @@ public class UserDAOImpl implements UserDAO {
         return false;
     }
 
+    //Comprobar si existe username
     @Override
     public boolean existsusername(String username) {
 
@@ -128,6 +136,7 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    //Comprobar si existe mail
     @Override
     public boolean existsmail(String email) {
         try {
@@ -143,6 +152,7 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    //Get del password por username
     @Override
     public boolean getPasswordByUsername(String username, String password) {
         try {
@@ -159,6 +169,7 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    //Get parametro a parametro
     @Override
     public Object getParameterByParameter(String parameter, String byParameter, Object value) {
         try {
@@ -171,6 +182,7 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    //Update de un user
     @Override
     public boolean updateUser(User user) {
         try {
@@ -183,6 +195,7 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    //Update por parametro
     @Override
     public boolean updateByParameter(User user, String parameter, Object value) {
         try {
@@ -195,6 +208,7 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    //Update coins por username
     @Override
     public boolean updateUserCoinsByUsername(int userCoins, String userName) {
         try {
@@ -207,6 +221,7 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    //Update de los parametros del usuario
     @Override
     public User updateUserParameters(User oldUser, User changed) {
         try {
@@ -224,6 +239,7 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    //Update parametro por parametro
     @Override
     public boolean updateParameterByParameter(String parameter, Object parameterValue, String byParameter, Object byParameterValue) {
         try {
@@ -236,18 +252,7 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
-    /*@Override
-    public Object getPassHash(String parameter) {
-        try {
-            return session.getHash(parameter);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        } finally {
-            //session.close();
-
-        }*/
-
+    //Get de la contraseña hasheada
     @Override
     public String getPassHash(String parameter) {
         try {

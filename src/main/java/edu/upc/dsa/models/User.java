@@ -12,9 +12,7 @@ public class User {
     private String username;
     private String mail;
     private int coins;
-    //public List<Item> itemList = new ArrayList<>();
-    //private double numCoins;
-   // private List<String> items;
+
     public User(String name, String username, String pass, String mail, int coins) {
         this.name = name;
         this.password = pass;
@@ -22,9 +20,6 @@ public class User {
         this.mail = mail;
         this.coins = coins;
     }
-    //public List<Item> getItemList(){
-    //    return itemList;
-    //}
 
     public String getMail() {
         return mail;

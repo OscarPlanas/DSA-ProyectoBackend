@@ -93,43 +93,7 @@ public class SessionImpl implements Session {
             return null;
         }
     }
-    /*@Override
-    public E getByName(Class theClass, String name) {
-        String query = QueryHelper.createQuerySELECTByName(theClass, name);
-        PreparedStatement pstm = null;
 
-        try {
-            pstm = conn.prepareStatement(query);
-            pstm.executeQuery();
-            ResultSet rs = pstm.getResultSet();
-            ResultSetMetaData rsmd = rs.getMetaData();
-
-            Object entity = theClass.newInstance();
-
-            while(rs.next()) {
-                for (int i = 1; i<rsmd.getColumnCount() + 1; i++) {
-                    ObjectHelper.setter(entity,rsmd.getColumnName(i),rs.getObject(i));
-                    //logger.info("i = " + i + ", nom columna: " + rsmd.getColumnName(i) + ", value: " + rs.getObject(i));
-                }
-            }
-
-            if((ObjectHelper.getter(entity,"name") == null)) {
-                logger.info("entra a null");
-                return null;
-            }
-
-            return (E) entity;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }*/
     public Object getByTwoParameters(Class theClass, String byFirstParameter, Object byFirstParameterValue, String bySecondParameter, Object bySecondParameterValue) {
 
         String selectQuery = QueryHelper.createQuerySELECTbyTwoParameters(theClass, byFirstParameter, bySecondParameter);
@@ -388,21 +352,16 @@ public class SessionImpl implements Session {
 
         String deleteQuery = QueryHelper.createQueryDELETE(entity);
         logger.info(deleteQuery);
-        //String id = ObjectHelper.getID(entity);
-        //String [] username = ObjectHelper.getFields(entity);
         PreparedStatement pstm = null;
 
         try {
             pstm = conn.prepareStatement(deleteQuery);
-            //pstm.setString(1, username[1]);
             logger.info(pstm.toString());
             pstm.setObject(1, ObjectHelper.getter(entity, "id"));
             pstm.executeQuery();
-           // return true;
 
         } catch (SQLException e) {
             e.printStackTrace();
-           // return false;
         }
     }
 
@@ -566,90 +525,6 @@ public class SessionImpl implements Session {
         }
         return objectResult;
     }
-
-   /* public HashMap<Integer, Object> FindAllByParameter(Class theClass, String byParameter, Object byParameterValue) {
-
-        String selectQuery = QueryHelper.createQuerySELECTbyParameter(theClass, byParameter);
-        logger.info(selectQuery);
-
-        PreparedStatement pstm = null;
-        ResultSet rs = null;
-        ResultSetMetaData rsmd = null;
-        HashMap<Integer, Object> result = new HashMap<>();
-        Object object = null;
-
-        try {
-            object = theClass.getDeclaredConstructor().newInstance();
-
-            pstm = conn.prepareStatement(selectQuery);
-            pstm.setObject(1, byParameterValue);
-            rs = pstm.executeQuery();
-
-            while (rs.next()) {
-                rsmd = rs.getMetaData();
-
-                for (int i = 1; i <= rsmd.getColumnCount(); i++) {
-                    String field = rsmd.getColumnName(i);
-                    ObjectHelper.setter(object, field, rs.getObject(i));
-                }
-                if (rs.getObject(1) instanceof Integer) {
-                    result.put((int) rs.getObject(1), object);
-                } else {
-                    System.out.println("Error, " + rs.getObject(1) + " is not an Integer");
-                }
-                object = theClass.getDeclaredConstructor().newInstance();
-            }
-            return result;
-
-        } catch (SQLException | NoSuchMethodException | IllegalAccessException
-                | InstantiationException | InvocationTargetException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public HashMap<Integer, Object> FindAllByParameter(Class theClass, String byParameter, Object byParameterValue) {
-
-        String selectQuery = QueryHelper.createQuerySELECTbyParameter(theClass, byParameter);
-        logger.info(selectQuery);
-
-        PreparedStatement pstm = null;
-        ResultSet rs = null;
-        ResultSetMetaData rsmd = null;
-        HashMap<Integer, Object> result = new HashMap<>();
-        Object object = null;
-
-        try {
-            object = theClass.getDeclaredConstructor().newInstance();
-
-            pstm = conn.prepareStatement(selectQuery);
-            pstm.setObject(1, byParameterValue);
-            rs = pstm.executeQuery();
-
-            while (rs.next()) {
-                rsmd = rs.getMetaData();
-
-                for (int i = 1; i <= rsmd.getColumnCount(); i++) {
-                    String field = rsmd.getColumnName(i);
-                    ObjectHelper.setter(object, field, rs.getObject(i));
-                }
-                if (rs.getObject(1) instanceof Integer) {
-                    result.put((int) rs.getObject(1), object);
-                } else {
-                    System.out.println("Error, " + rs.getObject(1) + " is not an Integer");
-                }
-                object = theClass.getDeclaredConstructor().newInstance();
-            }
-            return result;
-
-        } catch (SQLException | NoSuchMethodException | IllegalAccessException
-                | InstantiationException | InvocationTargetException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }*/
-
-
 
     @Override
     public int size() {

@@ -8,20 +8,22 @@ import java.util.List;
 
 public interface InventoryDAO {
 
+    //Función create inventario
     boolean createInventory(Inventory inventory);
 
+    //Gets
     List<Inventory> getInventoryListByUserName(String userName);
-
-    //Inventory getInventoryByUserName(String userName);
     Inventory getByParameter(String parameter, Object value);
     Inventory getInventoryByUserNameAndItemName(String userName, String itemName);
     Inventory getByTwoParameters(String firstParameter, Object firstValue, String secondParameter, Object secondValue);
     Object getParameterByParameter(String parameter, String byParameter, Object value);
 
+    //Añadimos inventario
     void addInventory(String username, String NameItem);
 
     boolean existsInventoryByUserNameAndItemName(String userName, String itemName);
 
+    //Updates
     boolean update(Inventory inventory);
     boolean updateByParameter(Inventory inventory, String parameter, Object value);
     boolean updateUsername(String oldName, User newUser);
@@ -30,6 +32,7 @@ public interface InventoryDAO {
     boolean updateParameterByTwoParameters(Class theClass, String parameter, Object parameterValue, String byFirstParameter, Object byFirstParameterValue, String bySecondParameter, Object bySecondParameterValue);
     boolean updateItemQuantityByUserNameAndItemName(int itemQuantity, String userName, String itemName);
 
+    //Deletes
     void delete(Inventory inventory);
     boolean deleteInventoryByUsername(String userName);
     boolean deleteByParameter(String parameter, Object value);

@@ -25,7 +25,7 @@ public class UserManagerTest {
         logger.warn("Warning Test Message!");
         logger.error("Error Test Message!");
         //Initialzing Test User
-        this.manager.addUser(new User("Renuka", "Renu12","Renujeje" ,"renuka@gmail.com"));
+        //this.manager.addUser(new User("Renuka", "Renu12","Renujeje" ,"renuka@gmail.com"));
 
     }
     @Test
@@ -35,6 +35,6 @@ public class UserManagerTest {
     }
     @Test
     public void RegistroTest(){
-        this.manager.addUser(new User("Esther", "12345", "EstheMC", "esther@gmail.com"));
+        //this.manager.addUser(new User("Esther", "12345", "EstheMC", "esther@gmail.com"));
     }
 }

@@ -34,7 +34,7 @@ public class UserDAOImpl implements UserDAO {
 
             session.save(usuario);
         } catch (Exception e) {
-            // LOG
+            e.printStackTrace();
         } finally {
             session.close();
         }
@@ -44,19 +44,26 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public List<User> getAllUsers() {
-        return ((List) session.queryObjects(User.class));
+        try {
+            return ((List) session.queryObjects(User.class));
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }finally {
+            //session.close();
+        }
     }
 
     @Override
     public User getUser(String username) {
-        //try {
-        return ((User) session.getByParameter(User.class, "username", username));
-        /*} catch (Exception e) {
-            // LOG
+        try {
+            return ((User) session.getByParameter(User.class, "username", username));
+        } catch (Exception e) {
+           e.printStackTrace();
             return null;
         } finally {
-            session.close();
-        }*/
+            //session.close();
+        }
 
     }
 
@@ -65,98 +72,182 @@ public class UserDAOImpl implements UserDAO {
         try {
             session.size();
         } catch (Exception e) {
-            // LOG
+            e.printStackTrace();
         }
         return 0;
     }
 
     @Override
     public void deleteUser(User user) {
-        session.delete(user);
+        try {
+            session.delete(user);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            //session.close();
+        }
     }
 
     @Override
     public boolean deleteUserByUsername(String username) {
-        return session.deleteByParameter(User.class, "username", username);
+        try {
+            return session.deleteByParameter(User.class, "username", username);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            //session.close();
+        }
+        return false;
     }
 
     @Override
     public boolean deleteByParameter(String parameter, Object value) {
-        return session.deleteByParameter(User.class, parameter, value);
+        try {
+            return session.deleteByParameter(User.class, parameter, value);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            //session.close();
+        }
+        return false;
     }
 
     @Override
     public boolean existsusername(String username) {
-        if(session.getParameterByParameter(User.class, "username", "username", username) == null){
+
+        try {
+            if(session.getParameterByParameter(User.class, "username", "username", username) == null){
+                return false;
+            }else return true;
+        } catch (Exception e) {
+            e.printStackTrace();
             return false;
-        }else return true;
+        } finally {
+            //session.close();
+
+        }
     }
 
     @Override
     public boolean existsmail(String email) {
-        if(session.getByParameter(User.class, "mail", email) == null){
+        try {
+            if(session.getByParameter(User.class, "mail", email) == null){
+                return false;
+            }else return true;
+        } catch (Exception e) {
+            e.printStackTrace();
             return false;
-        }else return true;
+        } finally {
+            //session.close();
+
+        }
     }
 
     @Override
-    public boolean getPasswordByName(String name, String password) {
-        String passwordUser = (String) session.getParameterByParameter(User.class, "password", "name", name);
-        if (password.equals(passwordUser))
-            return true;
-        else
+    public boolean getPasswordByUsername(String username, String password) {
+        try {
+            String passwordUser = (String) session.getParameterByParameter(User.class, "password", "username", username);
+            if (password.equals(passwordUser))
+                return true;
+            else
+                return false;
+        } catch (Exception e) {
+            e.printStackTrace();
             return false;
+        } finally {
+            //session.close();
+        }
     }
 
     @Override
     public Object getParameterByParameter(String parameter, String byParameter, Object value) {
-        return session.getParameterByParameter(User.class, parameter, byParameter, value);
+        try {
+            return session.getParameterByParameter(User.class, parameter, byParameter, value);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            //session.close();
+        }
     }
+
     @Override
     public boolean updateUser(User user) {
-        return session.update(user);
+        try {
+            return session.update(user);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            //session.close();
+        }
     }
 
     @Override
     public boolean updateByParameter(User user, String parameter, Object value) {
-        return session.updateByParameter(user, parameter, value);
+        try {
+            return session.updateByParameter(user, parameter, value);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            //session.close();
+        }
     }
 
     @Override
     public boolean updateUserCoinsByUsername(int userCoins, String userName) {
-        return session.updateParameterByParameter(User.class, "coins", userCoins, "username", userName);
+        try {
+            return session.updateParameterByParameter(User.class, "coins", userCoins, "username", userName);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            //session.close();
+        }
     }
 
     @Override
     public User updateUserParameters(User oldUser, User changed) {
-        //''User user = (User) this.session.getByParameter(User.class, oldUser.getUsername(), newUser.getUsername());
+        try {
+            session.updateParameterByParameter(User.class, "name", changed.getName(), "name", oldUser.getName());
+            session.updateParameterByParameter(User.class, "password", changed.getPassword(), "password", oldUser.getPassword());
+            session.updateParameterByParameter(User.class, "username", changed.getUsername(), "username", oldUser.getUsername());
+            session.updateParameterByParameter(User.class, "mail", changed.getMail(), "mail", oldUser.getMail());
+            logger.info("Old Name: " + oldUser.getName());
+            logger.info("New Name: " + changed.getName());
+        }catch (Exception e){
 
-        /*oUser.setName(oldUser.getName());
-        oldUser.setPassword(oldUser.getPassword());
-        oldUser.setUsername(oldUser.getUsername());
-        oldUser.setMail(oldUser.getMail());*/
-
-        session.updateParameterByParameter(User.class, "name", changed.getName(), "name", oldUser.getName());
-        session.updateParameterByParameter(User.class, "password", changed.getPassword(), "password", oldUser.getPassword());
-        session.updateParameterByParameter(User.class, "username", changed.getUsername(), "username", oldUser.getUsername());
-        session.updateParameterByParameter(User.class, "mail", changed.getMail(), "mail", oldUser.getMail());
-        logger.info("Old Name: " + oldUser.getName());
-        logger.info("New Name: " + changed.getName());
-
-        return changed;
-
-        /*if (session.updateParameterByParameter(User.class, "name", newUser.getName(), "name", oldName) &&
-                session.updateParameterByParameter(User.class, "password", newUser.getPassword(), "name", newUser.getName()) &&
-                session.updateParameterByParameter(User.class, "mail", newUser.getMail(), "name", newUser.getName()))
-            return true;
-        else
-            return false;*/
+        }finally {
+            //session.close();
+            return changed;
+        }
     }
 
     @Override
     public boolean updateParameterByParameter(String parameter, Object parameterValue, String byParameter, Object byParameterValue) {
-        return session.updateParameterByParameter(User.class, parameter, parameterValue, byParameter, byParameterValue);
+        try {
+            return session.updateParameterByParameter(User.class, parameter, parameterValue, byParameter, byParameterValue);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            //session.close();
+        }
     }
+
+    /*@Override
+    public Object getPassHash(String parameter) {
+        try {
+            return session.getHash(parameter);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            //session.close();
+
+        }*/
+
 
 }
 

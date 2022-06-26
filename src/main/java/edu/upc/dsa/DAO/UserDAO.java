@@ -10,7 +10,7 @@ public interface UserDAO {
 
     public List<User> getAllUsers();
     public User getUser(String username);
-    boolean getPasswordByName(String username, String password);
+    boolean getPasswordByUsername(String username, String password);
     Object getParameterByParameter(String parameter, String byParameter, Object value);
 
     public int userListSize();

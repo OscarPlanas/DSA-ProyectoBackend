@@ -9,6 +9,7 @@ public class Game {
     private int coins;
     private int energy;
     private int levels;
+    //private int
 
     public Game(){
     }

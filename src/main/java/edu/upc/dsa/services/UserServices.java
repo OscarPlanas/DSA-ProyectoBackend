@@ -18,6 +18,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.apache.log4j.Logger;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.GenericEntity;
@@ -28,6 +29,7 @@ import java.util.List;
 @Api(value = "/user", description = "Endpoint to User Service")
 @Path("/user")
 public class UserServices {
+    final static Logger logger = Logger.getLogger(SessionImpl.class);
 
     private UserDAO userDAO;
     private InventoryDAO inventoryDAO;
@@ -57,19 +59,36 @@ public class UserServices {
     @ApiOperation(value = "Login usuario", notes = "Password")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful", response = User.class),
-            @ApiResponse(code = 404, message = "User not found")
-
+            @ApiResponse(code = 404, message = "User not found"),
+            @ApiResponse(code = 407, message = "Password not correct"),
+            @ApiResponse(code = 501, message = "Incorrect inputs")
     })
-
     @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response userLogIn(CredentialsLogIn credLogin) {
-        User u = this.userDAO.getUser(credLogin.getUsername());
+        String username = credLogin.getUsername();
+        logger.info("-------------- " + username + " ++++++++++++++");
+        User u = this.userDAO.getUser(username);
+        logger.info(u.getUsername() + " useruseruser");
+        logger.info(u.getPassword() + " paaaaaaaaaaaaaaaaaaaaaaasss");
 
-        if (u != null) {
-            return Response.status(201).entity(u).build();
-        } else
+        logger.info(userDAO.existsusername(credLogin.getUsername())+" kjanakjgnkajsgnkangan");
+        logger.info(userDAO.getPasswordByUsername(credLogin.getUsername(), credLogin.getPassword())+ " credpass");
+
+        if (credLogin.getUsername().isEmpty() || credLogin.getPassword().isEmpty()){
+            return Response.status(501).build();
+        }
+
+        if (userDAO.existsusername(credLogin.getUsername())) {
+            if(userDAO.getPasswordByUsername(credLogin.getUsername(), credLogin.getPassword())) {
+                return Response.status(201).entity(u).build();
+            }
+            else {
+                return Response.status(407).build();
+            }
+        }  else {
             return Response.status(404).build();
+        }
     }
 
     //Registro de usuario
@@ -218,9 +237,6 @@ public class UserServices {
 
             }
         }
-
-
-
     }
 
 

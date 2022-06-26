@@ -22,7 +22,7 @@ public class ItemManagerTest {
         logger.warn("Warning Test Message!");
         logger.error("Error Test Message!");
         //Initialzing Test User
-        this.manager.addItem(new Item("flecha", "para el arco", 15));
+       // this.manager.addItem(new Item("flecha", "para el arco", 15));
 
     }
 

@@ -23,11 +23,63 @@
 			document.getElementById("Cantidad_" + index).textContent = a;
 			}
 			function comprar(index){
+			var regex = /(\d+)/g;
+			var consum = document.getElementById("quantItem_" + document.getElementById("Nombre_Objeto_" + index).textContent);
+			consum = consum.innerText;
+			console.log(consum);
+			if(consum != "Ya lo tienes" && consum != "No lo tienes"){
 			if($("#Cantidad_" + index).text() == 0)
 				alert("Pon una cantidad primero");
 				else{
+				console.log($("#money").slice(0, -3));
+				if($("#money").text() - $("#Cantidad_" + index).text() >= 0){
 				var data = {"username": user_name,
 						"quantItem": document.getElementById("Cantidad_" + index).textContent,
+						"nameItem": document.getElementById("Nombre_Objeto_" + index).textContent
+						}
+				$.ajax({
+					type:'PUT',
+					url:'/dsaApp/store/buy',
+					contentType: "application/json; charset=utf-8",
+					dataType: 'json',
+					data: JSON.stringify(data),
+					success: function () {
+					},
+				});
+				setTimeout(function(){
+				$.ajax({
+					type:'GET',
+					url:'/dsaApp/user/' + user_name,
+					contentType: "application/json; charset=utf-8",
+					dataType: 'json',
+					success: function (response) {
+						user_coins = response.coins;
+						document.getElementById("money").textContent = user_coins + " OC";
+						var data1 = {"username": user_name,
+						"NameItem": document.getElementById("Nombre_Objeto_" + index).textContent}
+						$.ajax({
+							type:'GET',
+							url:'/dsaApp/user/userInventoryList/' + user_name + '/' + document.getElementById("Nombre_Objeto_" + index).textContent,
+							dataType: 'json',
+							data: JSON.stringify(data1),
+							success: function (response1) {
+								document.getElementById("quantItem_" + document.getElementById("Nombre_Objeto_" + index).textContent).textContent = "Tienes " + response1.quantItem;
+							}
+						});
+					}
+				});
+				},1);
+				alert("Has comprado " + document.getElementById("Cantidad_" + index).textContent + " " + document.getElementById("Nombre_Objeto_" + index).textContent);
+				document.getElementById("Cantidad_" + index).textContent = 0;
+				}
+				}
+				alert("No tienes suficientes monedas");
+				document.getElementById("Cantidad_" + index).textContent = 0;
+				}
+				else{
+				if($("#money").text() - 100 >= 0){
+					var data = {"username": user_name,
+						"quantItem": 1,
 						"nameItem": document.getElementById("Nombre_Objeto_" + index).textContent
 						}
 				$.ajax({
@@ -56,15 +108,19 @@
 							dataType: 'json',
 							data: JSON.stringify(data1),
 							success: function (response1) {
-								document.getElementById("quantItem_" + document.getElementById("Nombre_Objeto_" + index).textContent).textContent = "Tienes " + response1.quantItem;
+								document.getElementById("quantItem_" + document.getElementById("Nombre_Objeto_" + index).textContent).textContent = "Ya lo tienes";
+								$("#button_comprar_" + index).hide();
 							}
 						});
 					}
 				});
 				},1);
-				alert("Has comprado " + document.getElementById("Cantidad_" + index).textContent + " " + document.getElementById("Nombre_Objeto_" + index).textContent);
+				alert("Has comprado " + document.getElementById("Nombre_Objeto_" + index).textContent);
 				document.getElementById("Cantidad_" + index).textContent = 0;
 				}
+				}
+				alert("No tienes suficientes monedas");
+				document.getElementById("Cantidad_" + index).textContent = 0;
 			}
 			function registro() {
 			var data = {"id": "eijfoewf",
@@ -114,6 +170,7 @@
 			
 			function logout(){
 				window.location.reload();
+				user_name = null;
 			}
 			
 			function getItems() {
@@ -138,7 +195,7 @@
 				var cant = document.getElementById("cantidad");
 				const element = document.getElementById("items_cards");
 				const element1 = document.getElementById("item_card");
-				$("#items_cards").append('<div id="item_card_' + index +'" align="center" class="shop-box" style="margin: 5px; width: 30%"><img style="float:center; width:90%; height: 40%; margin-top: 30px" src="' + item.image + '"/><div  style="margin-top: 10px; margin-bottom: 15px"><span><strong id="Nombre_Objeto_' + index +'" style="font-size: 30px">' + item.name +'</strong></span></div><div><span><strong id="item_precio' + index + '" style="font-size: 30px">'+ item.coins +' OC</strong></span></div><div style="display:flex; justify-content:center; margin-top: 15px"><div style="display: flex; align-items: center;"><img onclick="myFunction1(' + index + ')" id="menos_img_' + index + '" style="cursor:pointer; width:20px; height: 20px" src="img/menos.png"/></div><span id="Cantidad_' + index + '" style="display: flex; align-items: center; font-size:40px; padding-bottom: 4px" class="masmenos">0</span><div style="display: flex; align-items: center;"><img onclick="myFunction(' + index + ')" style="cursor:pointer; width:20px; height: 20px" src="img/mas.png"/></div></div><span id="quantItem_' + item.name + '"></span><br><button onclick="comprar(' + index + ')" style="border:none; font-size:20px; padding: 0 10px 5px 10px; border-radius: 4px; background-color: #4E9BC4; color: #FFFFFF; margin-top: 10px">Comprar</button></div>');
+				console.log(item.consum);
 				var data = {"username": user_name,
 						"NameItem": item.name}
 				$.ajax({
@@ -147,7 +204,21 @@
 					dataType: 'json',
 					data: JSON.stringify(data),
 					success: function (response) {
-						document.getElementById("quantItem_" + item.name).textContent = "Tienes " + response.quantItem;
+						if(item.consum == 1){
+							$("#items_cards").append('<div id="item_card_' + index +'" align="center" class="shop-box" style="margin: 5px; width: 30%"><img style="float:center; width:90%; height: 40%; margin-top: 30px" src="' + item.image + '"/><div  style="margin-top: 10px; margin-bottom: 15px"><span><strong id="Nombre_Objeto_' + index +'" style="font-size: 30px">' + item.name +'</strong></span></div><div><span><strong id="item_precio' + index + '" style="font-size: 30px">'+ item.coins +' OC</strong></span></div><div style="display:flex; justify-content:center; margin-top: 15px"><div style="display: flex; align-items: center;"><img onclick="myFunction1(' + index + ')" id="menos_img_' + index + '" style="cursor:pointer; width:20px; height: 20px" src="img/menos.png"/></div><span id="Cantidad_' + index + '" style="display: flex; align-items: center; font-size:40px; padding-bottom: 4px" class="masmenos">0</span><div style="display: flex; align-items: center;"><img onclick="myFunction(' + index + ')" style="cursor:pointer; width:20px; height: 20px" src="img/mas.png"/></div></div><span id="quantItem_' + item.name + '"></span><br><button id="button_comprar_' + index + '" onclick="comprar(' + index + ')" style="border:none; font-size:20px; padding: 0 10px 5px 10px; border-radius: 4px; background-color: #4E9BC4; color: #FFFFFF; margin-top: 10px">Comprar</button></div>');
+						}
+						else{
+							$("#items_cards").append('<div id="item_card_' + index +'" align="center" class="shop-box" style="margin: 5px; width: 30%"><img style="float:center; width:90%; height: 40%; margin-top: 30px" src="' + item.image + '"/><div  style="margin-top: 10px; margin-bottom: 15px"><span><strong id="Nombre_Objeto_' + index +'" style="font-size: 30px">' + item.name +'</strong></span></div><div><span><strong id="item_precio' + index + '" style="font-size: 30px">'+ item.coins +' OC</strong></span></div><div style="display:flex; justify-content:center; margin-top: 15px"><div style="display: flex; align-items: center;"></div></div><span id="quantItem_' + item.name + '"></span><br><button id="button_comprar_' + index + '" onclick="comprar(' + index + ')" style="border:none; font-size:20px; padding: 0 10px 5px 10px; border-radius: 4px; background-color: #4E9BC4; color: #FFFFFF; margin-top: 10px">Comprar</button></div>');
+						}
+						if(item.consum == 1){
+							document.getElementById("quantItem_" + item.name).textContent = "Tienes " + response.quantItem;
+						}else if(response.quantItem >= 1){
+								document.getElementById("quantItem_" + item.name).textContent = "Ya lo tienes";
+								$("#button_comprar_" + index).hide();
+							}
+							else{
+								document.getElementById("quantItem_" + item.name).textContent = "No lo tienes";
+								}
 					}
 				});
 

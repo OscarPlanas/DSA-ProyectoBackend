@@ -223,13 +223,41 @@ public class UserServices {
         if (userDAO.existsusername(username)) {
             Inventory i = null;
             try {
-                i = inventoryDAO.getByParameter("NameItem", NameItem);
+                i = inventoryDAO.getByTwoParameters("NameItem", NameItem, "username", username);
 
             } catch (Throwable t) {
                 t.printStackTrace();
             }
             i.getQuantItem();
             return Response.status(201).entity(i).build();
+        } else {
+            return Response.status(404).build();
+        }
+    }
+
+    //Get del inventario de un usuario
+    @GET
+    @ApiOperation(value = "Get del inventario de un usuario", notes = "Username")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful", response = Inventory.class, responseContainer = "Lista"),
+            @ApiResponse(code = 404, message = "User not found")
+    })
+    @Path("/userInventoryList/{username}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUserInventory(@PathParam("username") String username) {
+
+        if (userDAO.existsusername(username)) {
+            List<Inventory> list = null;
+            try {
+                list = inventoryDAO.getInventoryListByUserName(username);
+
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+            GenericEntity<List<Inventory>> entity = new GenericEntity<List<Inventory>>(list){};
+
+            //i.getQuantItem();
+            return Response.status(201).entity(entity).build();
         } else {
             return Response.status(404).build();
         }

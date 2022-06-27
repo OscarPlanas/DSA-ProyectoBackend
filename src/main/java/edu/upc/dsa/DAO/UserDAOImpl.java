@@ -37,7 +37,7 @@ public class UserDAOImpl implements UserDAO {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            session.close();
+            //session.close();
         }
 
         return usuarioID;

@@ -8,14 +8,12 @@ public class FactorySession {
 
     public static Session openSession() {
 
-
         Connection conn = getConnection();
 
         Session session = new SessionImpl(conn);
 
         return session;
     }
-
 
 
     protected static Connection getConnection() {

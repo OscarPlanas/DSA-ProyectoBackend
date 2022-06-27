@@ -5,12 +5,14 @@ public class Item {
     private String description;
     private int coins;
     private String image;
+    private int consum;
 
-    public Item(String name, String descripcion, int coins, String image){
+    public Item(String name, String descripcion, int coins, String image, int consum){
         this.name = name;
         this.description = descripcion;
         this.coins = coins;
         this.image = image;
+        this.consum = consum;
     }
     public Item(){
     }
@@ -37,6 +39,14 @@ public class Item {
 
     public int setCoins(int coins) {
         return this.coins = coins;
+    }
+
+    public int getConsum() {
+        return consum;
+    }
+
+    public void setConsum(int consum) {
+        this.consum = consum;
     }
 
     public String getImage() {
